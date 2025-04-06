@@ -1,36 +1,65 @@
-// import logo from './logo.svg';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       <header className="App-header">
-//         <img src={logo} className="App-logo" alt="logo" />
-//         <p>
-//           Edit <code>src/App.js</code> and save to reload.
-//         </p>
-//         <a
-//           className="App-link"
-//           href="https://reactjs.org"
-//           target="_blank"
-//           rel="noopener noreferrer"
-//         >
-//           Learn React
-//         </a>
-//       </header>
-//     </div>
-//   );
-// }
-
-// export default App;
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
+import Web3 from "web3";
+
+// ABI for a simplified smart contract (you would replace this with your actual contract ABI)
+const vendorRegistryABI = [
+  {
+    "inputs": [
+      {
+        "internalType": "string",
+        "name": "_vendorName",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_partId",
+        "type": "string"
+      },
+      {
+        "internalType": "string",
+        "name": "_contactInfo",
+        "type": "string"
+      }
+    ],
+    "name": "registerVendor",
+    "outputs": [],
+    "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "getVendorCount",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  }
+];
 
 function App() {
   const [isLogin, setIsLogin] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [form, setForm] = useState({ email: "", password: "" });
   const [selectedPart, setSelectedPart] = useState(null);
+  const [web3, setWeb3] = useState(null);
+  const [account, setAccount] = useState(null);
+  const [contract, setContract] = useState(null);
+  const [vendorForm, setVendorForm] = useState({
+    companyName: "",
+    contactEmail: "",
+    phoneNumber: "",
+    supplierCapacity: "",
+    certification: "",
+    deliveryTime: ""
+  });
+  const [isBlockchainConnected, setIsBlockchainConnected] = useState(false);
+  const [txStatus, setTxStatus] = useState("");
 
   const parts = [
     {
@@ -192,6 +221,38 @@ function App() {
     },    
   ];
   
+  // Initialize Web3 connection
+  useEffect(() => {
+    const initWeb3 = async () => {
+      if (window.ethereum) {
+        try {
+          // Request account access
+          await window.ethereum.request({ method: 'eth_requestAccounts' });
+          const web3Instance = new Web3(window.ethereum);
+          setWeb3(web3Instance);
+          
+          // Get connected account
+          const accounts = await web3Instance.eth.getAccounts();
+          setAccount(accounts[0]);
+          
+          // Connect to smart contract (replace with your contract address)
+          const contractAddress = "0x1234567890123456789012345678901234567890"; // Example address
+          const contractInstance = new web3Instance.eth.Contract(
+            vendorRegistryABI,
+            contractAddress
+          );
+          setContract(contractInstance);
+          setIsBlockchainConnected(true);
+        } catch (error) {
+          console.error("User denied account access or error occurred:", error);
+        }
+      } else {
+        console.log("Please install MetaMask or another Ethereum wallet provider.");
+      }
+    };
+    
+    initWeb3();
+  }, []);
 
   const handleLogin = () => {
     if (form.email && form.password) {
@@ -200,12 +261,54 @@ function App() {
       alert("Please enter both email and password.");
     }
   };
+  
+  const handleVendorFormChange = (e) => {
+    setVendorForm({
+      ...vendorForm,
+      [e.target.name]: e.target.value
+    });
+  };
+  
+  const handleVendorSubmit = async () => {
+    if (!isBlockchainConnected) {
+      alert("Please connect to blockchain first");
+      return;
+    }
+    
+    setTxStatus("Submitting to blockchain...");
+    
+    try {
+      // Call the smart contract function
+      await contract.methods.registerVendor(
+        vendorForm.companyName,
+        selectedPart.id.toString(),
+        JSON.stringify({
+          email: vendorForm.contactEmail,
+          phone: vendorForm.phoneNumber,
+          capacity: vendorForm.supplierCapacity,
+          certification: vendorForm.certification,
+          deliveryTime: vendorForm.deliveryTime
+        })
+      ).send({ from: account });
+      
+      setTxStatus("Successfully registered on blockchain!");
+      setTimeout(() => {
+        setSelectedPart(null);
+        setTxStatus("");
+      }, 3000);
+    } catch (error) {
+      console.error("Transaction failed:", error);
+      setTxStatus("Transaction failed. See console for details.");
+    }
+  };
+
+  const [showVendorForm, setShowVendorForm] = useState(false);
 
   if (!isLoggedIn) {
     return (
       <div className="auth-container">
         <div className="auth-left">
-          <h1>Welcome to Our Procurement Platform</h1>
+          <h1>Welcome to Our Blockchain-Powered Procurement Platform</h1>
         </div>
 
         <div className="auth-right">
@@ -272,10 +375,24 @@ function App() {
           <li>👥 Buyers</li>
           <li>📦 Orders</li>
           <li>🏭 Vendors</li>
+          <li>⛓️ Blockchain Status: {isBlockchainConnected ? 
+              <span className="status-connected">Connected</span> : 
+              <span className="status-disconnected">Disconnected</span>}
+          </li>
+          {account && <li className="account-info">🔑 {account.substring(0, 6)}...{account.substring(account.length - 4)}</li>}
         </ul>
       </div>
 
       <div className="main-content">
+        <div className="header-banner">
+          <h2>Aerospace Part Catalog</h2>
+          <div className="blockchain-indicator">
+            {isBlockchainConnected ? 
+              <span className="blockchain-connected">⛓️ Blockchain Connected</span> : 
+              <span className="blockchain-disconnected">⛓️ Connect Wallet</span>}
+          </div>
+        </div>
+        
         {parts.map((part) => (
           <div className="buyer-card" key={part.id}>
             <h3>{part.name}</h3>
@@ -296,23 +413,131 @@ function App() {
       {selectedPart && (
         <div className="modal-overlay">
           <div className="modal-content-wide">
-            <h2>Material Specifications</h2>
-            <table>
-              <tbody>
-                {Object.entries(selectedPart.specs).map(([key, value]) => (
-                  <tr key={key}>
-                    <td><strong>{key}:</strong></td>
-                    <td>{value}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <div className="modal-actions">
-              <button onClick={() => setSelectedPart(null)} className="secondary">
-                Close
-              </button>
-              <button className="primary">Apply as Vendor</button>
-            </div>
+            {!showVendorForm ? (
+              <>
+                <h2>Material Specifications</h2>
+                <h3>{selectedPart.name}</h3>
+                <table>
+                  <tbody>
+                    {Object.entries(selectedPart.specs).map(([key, value]) => (
+                      <tr key={key}>
+                        <td><strong>{key}:</strong></td>
+                        <td>{value}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <div className="modal-actions">
+                  <button onClick={() => setSelectedPart(null)} className="secondary">
+                    Close
+                  </button>
+                  <button className="primary" onClick={() => setShowVendorForm(true)}>
+                    Apply as Vendor
+                  </button>
+                </div>
+              </>
+            ) : (
+              <>
+                <h2>Apply as Vendor for {selectedPart.name}</h2>
+                <div className="blockchain-note">
+                  <p>
+                    <strong>⛓️ Blockchain Integration:</strong> Your application will be securely recorded on the blockchain, 
+                    ensuring transparency and immutability.
+                  </p>
+                </div>
+                
+                <div className="vendor-form">
+                  <div className="form-group">
+                    <label>Company Name</label>
+                    <input 
+                      type="text" 
+                      name="companyName"
+                      value={vendorForm.companyName}
+                      onChange={handleVendorFormChange}
+                      placeholder="Your company name"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Contact Email</label>
+                    <input 
+                      type="email" 
+                      name="contactEmail"
+                      value={vendorForm.contactEmail}
+                      onChange={handleVendorFormChange}
+                      placeholder="business@example.com"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Phone Number</label>
+                    <input 
+                      type="tel" 
+                      name="phoneNumber"
+                      value={vendorForm.phoneNumber}
+                      onChange={handleVendorFormChange}
+                      placeholder="+1 234 567 8900"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Supplier Capacity (units/month)</label>
+                    <input 
+                      type="number" 
+                      name="supplierCapacity"
+                      value={vendorForm.supplierCapacity}
+                      onChange={handleVendorFormChange}
+                      placeholder="1000"
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Certifications</label>
+                    <input 
+                      type="text" 
+                      name="certification"
+                      value={vendorForm.certification}
+                      onChange={handleVendorFormChange}
+                      placeholder="ISO 9001, AS9100, etc."
+                    />
+                  </div>
+                  
+                  <div className="form-group">
+                    <label>Average Delivery Time (days)</label>
+                    <input 
+                      type="number" 
+                      name="deliveryTime"
+                      value={vendorForm.deliveryTime}
+                      onChange={handleVendorFormChange}
+                      placeholder="14"
+                    />
+                  </div>
+                </div>
+                
+                {txStatus && <div className="tx-status">{txStatus}</div>}
+                
+                <div className="blockchain-address">
+                  {account ? (
+                    <span>Connected Wallet: {account.substring(0, 6)}...{account.substring(account.length - 4)}</span>
+                  ) : (
+                    <span className="status-warning">No wallet connected. Please connect your Ethereum wallet.</span>
+                  )}
+                </div>
+                
+                <div className="modal-actions">
+                  <button onClick={() => setShowVendorForm(false)} className="secondary">
+                    Back
+                  </button>
+                  <button 
+                    className="primary" 
+                    onClick={handleVendorSubmit}
+                    disabled={!isBlockchainConnected}
+                  >
+                    {isBlockchainConnected ? "Submit to Blockchain" : "Connect Wallet First"}
+                  </button>
+                </div>
+              </>
+            )}
           </div>
         </div>
       )}
