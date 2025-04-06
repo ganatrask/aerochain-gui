@@ -67,6 +67,79 @@ function App() {
   const [vendorControlOpen, setVendorControlOpen] = useState(false);
   const [showVendorForm, setShowVendorForm] = useState(false);
 
+  // Sample vendors data
+  const vendors = [
+    { id: 1, name: "AeroTech Industries", rating: 4.8, location: "Seattle, WA", blockchain: true, activeContracts: 12, contactPerson: "John Smith", email: "jsmith@aerotech.com", phone: "206-555-1234", deliveryPerformance: 98, qualityScore: 95, avgLeadTime: 14 },
+    { id: 2, name: "TitaniumPro Supplies", rating: 4.5, location: "Phoenix, AZ", blockchain: true, activeContracts: 8, contactPerson: "Sarah Johnson", email: "sjohnson@titanium.com", phone: "480-555-9876", deliveryPerformance: 92, qualityScore: 97, avgLeadTime: 18 },
+    { id: 3, name: "Global Aero Components", rating: 4.2, location: "Dallas, TX", blockchain: true, activeContracts: 5, contactPerson: "David Williams", email: "dwilliams@globalaero.com", phone: "214-555-4321", deliveryPerformance: 89, qualityScore: 90, avgLeadTime: 21 },
+    { id: 4, name: "Precision Aerospace", rating: 4.7, location: "Boston, MA", blockchain: false, activeContracts: 3, contactPerson: "Michelle Brown", email: "mbrown@precision.com", phone: "617-555-7890", deliveryPerformance: 94, qualityScore: 93, avgLeadTime: 16 },
+  ];
+  
+  // Sample ongoing orders
+  const ongoingOrders = [
+    { id: 1, partName: "Turbofan Blade", companyName: "AeroTech Industries", count: 500, orderDate: "2025-03-15", deliveryDate: "2025-04-20", progress: 65, forecastDelivery: "On time", status: "In Production" },
+    { id: 2, partName: "Actuator Arm", companyName: "TitaniumPro Supplies", count: 300, orderDate: "2025-03-10", deliveryDate: "2025-04-15", progress: 80, forecastDelivery: "Early (Apr 12)", status: "Final Testing" },
+    { id: 3, partName: "Landing Gear Shaft", companyName: "Global Aero Components", count: 150, orderDate: "2025-03-20", deliveryDate: "2025-04-25", progress: 40, forecastDelivery: "Delayed (May 2)", status: "Production" },
+    { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 800, orderDate: "2025-03-01", deliveryDate: "2025-04-10", progress: 95, forecastDelivery: "On time", status: "Quality Control" },
+  ];
+  
+  // Sample current inventory
+  const currentInventory = [
+    { id: 1, partName: "Turbofan Blade", companyName: "AeroTech Industries", count: 1250, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-30", minThreshold: 1000 },
+    { id: 2, partName: "Actuator Arm", companyName: "TitaniumPro Supplies", count: 450, lastUpdate: "2025-04-03", nextOrderDue: "2025-04-15", minThreshold: 400 },
+    { id: 3, partName: "Landing Gear Shaft", companyName: "Global Aero Components", count: 180, lastUpdate: "2025-04-01", nextOrderDue: "2025-04-10", minThreshold: 200 },
+    { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 780, lastUpdate: "2025-04-05", nextOrderDue: "2025-05-15", minThreshold: 500 },
+    { id: 5, partName: "Servo Bracket Assembly", companyName: "AeroTech Industries", count: 620, lastUpdate: "2025-04-04", nextOrderDue: "2025-04-20", minThreshold: 400 },
+    { id: 6, partName: "Composite Fuselage Panel", companyName: "Global Aero Components", count: 320, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-12", minThreshold: 300 },
+  ];
+  
+  // Sample vendor performance data for charts
+  const vendorPerformanceData = [
+    { month: 'Nov', onTime: 85, quality: 88, blockchain: 60 },
+    { month: 'Dec', onTime: 87, quality: 89, blockchain: 65 },
+    { month: 'Jan', onTime: 89, quality: 91, blockchain: 72 },
+    { month: 'Feb', onTime: 91, quality: 93, blockchain: 78 },
+    { month: 'Mar', onTime: 93, quality: 94, blockchain: 85 },
+    { month: 'Apr', onTime: 92, quality: 95, blockchain: 90 },
+  ];
+  
+  // Sample blockchain activity data
+  const blockchainActivityData = [
+    { month: 'Nov', contracts: 8, verifications: 12 },
+    { month: 'Dec', contracts: 15, verifications: 18 },
+    { month: 'Jan', contracts: 22, verifications: 25 },
+    { month: 'Feb', contracts: 28, verifications: 32 },
+    { month: 'Mar', contracts: 35, verifications: 40 },
+    { month: 'Apr', contracts: 42, verifications: 45 },
+  ];
+  
+  // Sample inventory data
+  const inventoryLevelsData = [
+    { name: 'Turbofan Blade', value: 1250, threshold: 1000 },
+    { name: 'Actuator Arm', value: 450, threshold: 400 },
+    { name: 'Landing Gear Shaft', value: 180, threshold: 200 },
+    { name: 'Avionics Heat Sink', value: 780, threshold: 500 },
+    { name: 'Servo Bracket', value: 620, threshold: 400 },
+    { name: 'Fuselage Panel', value: 320, threshold: 300 },
+  ];
+  
+  // Sample lead time data
+  const leadTimeData = [
+    { vendor: 'AeroTech', quoted: 14, actual: 15 },
+    { vendor: 'TitaniumPro', quoted: 18, actual: 17 },
+    { vendor: 'Global Aero', quoted: 21, actual: 23 },
+    { vendor: 'Precision', quoted: 16, actual: 16 },
+  ];
+  
+  // Sample supplier distribution data
+  const supplierDistributionData = [
+    { name: 'West Coast', value: 35 },
+    { name: 'Midwest', value: 20 },
+    { name: 'East Coast', value: 25 },
+    { name: 'South', value: 15 },
+    { name: 'International', value: 5 },
+  ];
+
   const parts = [
     {
       id: 1,
@@ -236,6 +309,10 @@ function App() {
   const completedOrders = [
     { id: "#12345", rating: 5, comments: "Great service!" },
   ];
+  
+  // State for selected vendor or part details
+  const [selectedVendor, setSelectedVendor] = useState(null);
+  const [selectedInventoryPart, setSelectedInventoryPart] = useState(null);
   
   // Initialize Web3 connection
   useEffect(() => {
@@ -433,13 +510,92 @@ function App() {
               </div>
             </div>
             
+            {/* Order Tracking Section */}
+            <div className="section-header">
+              <h3>Ongoing Orders</h3>
+            </div>
+            <div className="data-table-container">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Part Name</th>
+                    <th>Vendor</th>
+                    <th>Quantity</th>
+                    <th>Delivery Date</th>
+                    <th>Progress</th>
+                    <th>Delivery Forecast</th>
+                    <th>Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ongoingOrders.map(order => (
+                    <tr key={order.id}>
+                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === order.partName));}}>{order.partName}</a></td>
+                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === order.companyName));}}>{order.companyName}</a></td>
+                      <td>{order.count.toLocaleString()}</td>
+                      <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
+                      <td>
+                        <div className="progress-bar-container">
+                          <div className="progress-bar" style={{width: `${order.progress}%`}}></div>
+                          <span className="progress-text">{order.progress}%</span>
+                        </div>
+                      </td>
+                      <td className={order.forecastDelivery.includes("Delayed") ? "delayed" : order.forecastDelivery.includes("Early") ? "early" : "on-time"}>
+                        {order.forecastDelivery}
+                      </td>
+                      <td>{order.status}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
+            {/* Inventory Status Section */}
+            <div className="section-header">
+              <h3>Current Inventory Status</h3>
+            </div>
+            <div className="data-table-container">
+              <table className="data-table">
+                <thead>
+                  <tr>
+                    <th>Part Name</th>
+                    <th>Supplier</th>
+                    <th>Current Count</th>
+                    <th>Last Updated</th>
+                    <th>Next Order Due</th>
+                    <th>Inventory Status</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {currentInventory.map(item => (
+                    <tr key={item.id}>
+                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === item.partName));}}>{item.partName}</a></td>
+                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === item.companyName));}}>{item.companyName}</a></td>
+                      <td>{item.count.toLocaleString()}</td>
+                      <td>{new Date(item.lastUpdate).toLocaleDateString()}</td>
+                      <td>{new Date(item.nextOrderDue).toLocaleDateString()}</td>
+                      <td className={item.count < item.minThreshold ? "low-inventory" : "good-inventory"}>
+                        {item.count < item.minThreshold ? "Low Stock" : "Good"}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+
             {/* Charts section */}
+            <div className="section-header">
+              <h3>Performance Analytics</h3>
+            </div>
             <div className="charts-grid">
               <div className="chart-container large">
                 <h3>Vendor Performance Timeline</h3>
                 <div className="chart-placeholder">
                   <div className="chart-description">
                     Shows on-time delivery rates and quality metrics over time
+                    <div className="chart-data">
+                      <pre>{JSON.stringify(vendorPerformanceData, null, 2)}</pre>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -449,6 +605,9 @@ function App() {
                 <div className="chart-placeholder">
                   <div className="chart-description">
                     Number of contracts registered on blockchain by month
+                    <div className="chart-data">
+                      <pre>{JSON.stringify(blockchainActivityData, null, 2)}</pre>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -458,15 +617,9 @@ function App() {
                 <div className="chart-placeholder">
                   <div className="chart-description">
                     Current inventory levels by part category
-                  </div>
-                </div>
-              </div>
-              
-              <div className="chart-container large">
-                <h3>Price Trend Analysis</h3>
-                <div className="chart-placeholder">
-                  <div className="chart-description">
-                    Historical pricing for key aerospace materials
+                    <div className="chart-data">
+                      <pre>{JSON.stringify(inventoryLevelsData.slice(0, 3), null, 2)}</pre>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -476,6 +629,9 @@ function App() {
                 <div className="chart-placeholder">
                   <div className="chart-description">
                     Average lead time by supplier and part category
+                    <div className="chart-data">
+                      <pre>{JSON.stringify(leadTimeData, null, 2)}</pre>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -485,6 +641,9 @@ function App() {
                 <div className="chart-placeholder">
                   <div className="chart-description">
                     Geographic distribution of aerospace suppliers
+                    <div className="chart-data">
+                      <pre>{JSON.stringify(supplierDistributionData, null, 2)}</pre>
+                    </div>
                   </div>
                 </div>
               </div>
