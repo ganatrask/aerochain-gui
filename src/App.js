@@ -400,7 +400,7 @@ function App() {
     return (
       <div className="auth-container">
         <div className="auth-left">
-          <h1>Welcome to Our Blockchain-Powered Procurement Platform</h1>
+          <h1>Welcome to Areochain: Blockchain-Powered Procurement Platform</h1>
         </div>
 
         <div className="auth-right">
@@ -2744,7 +2744,7 @@ function App() {
           <tr>
             <td>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ width: "8px", height: "8px", backgroundColor: "#4caf50", borderRadius: "50%", marginRight: "10px" }}></div>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#ff9800", borderRadius: "50%", marginRight: "10px" }}></div>
                 <span>Global Aero Components</span>
               </div>
             </td>
@@ -2760,9 +2760,9 @@ function App() {
                   overflow: "hidden",
                   marginRight: "10px"
                 }}>
-                  <div style={{ width: "92%", height: "100%", backgroundColor: "#4caf50" }}></div>
+                  <div style={{ width: "88%", height: "100%", backgroundColor: "#ff9800" }}></div>
                 </div>
-                <span>92</span>
+                <span>88</span>
               </div>
             </td>
             <td>AS9100, NADCAP</td>
@@ -2777,92 +2777,6 @@ function App() {
               </div>
             </td>
             <td>March 05, 2025</td>
-            <td>
-              <div className="action-buttons">
-                <button className="secondary small">Details</button>
-                <button className="primary small">Order</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ width: "8px", height: "8px", backgroundColor: "#ff9800", borderRadius: "50%", marginRight: "10px" }}></div>
-                <span>SkyHigh Materials</span>
-              </div>
-            </td>
-            <td>Raw Materials</td>
-            <td>Denver, CO, USA</td>
-            <td>
-              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ 
-                  width: "100px", 
-                  height: "10px", 
-                  backgroundColor: "#e0e0e0", 
-                  borderRadius: "5px", 
-                  overflow: "hidden",
-                  marginRight: "10px"
-                }}>
-                  <div style={{ width: "88%", height: "100%", backgroundColor: "#ff9800" }}></div>
-                </div>
-                <span>88</span>
-              </div>
-            </td>
-            <td>ISO 9001</td>
-            <td>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
-                  <span className="blockchain-icon">⛓️</span> Verified
-                </span>
-                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
-                  0x5Gh7...2j4K
-                </span>
-              </div>
-            </td>
-            <td>January 20, 2025</td>
-            <td>
-              <div className="action-buttons">
-                <button className="secondary small">Details</button>
-                <button className="primary small">Order</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ width: "8px", height: "8px", backgroundColor: "#4caf50", borderRadius: "50%", marginRight: "10px" }}></div>
-                <span>AeroMaxx Solutions</span>
-              </div>
-            </td>
-            <td>Component Suppliers</td>
-            <td>Austin, TX, USA</td>
-            <td>
-              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ 
-                  width: "100px", 
-                  height: "10px", 
-                  backgroundColor: "#e0e0e0", 
-                  borderRadius: "5px", 
-                  overflow: "hidden",
-                  marginRight: "10px"
-                }}>
-                  <div style={{ width: "94%", height: "100%", backgroundColor: "#4caf50" }}></div>
-                </div>
-                <span>94</span>
-              </div>
-            </td>
-            <td>AS9100, ISO 9001</td>
-            <td>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
-                  <span className="blockchain-icon">⛓️</span> Verified
-                </span>
-                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
-                  0x2Bf8...5a3C
-                </span>
-              </div>
-            </td>
-            <td>March 22, 2025</td>
             <td>
               <div className="action-buttons">
                 <button className="secondary small">Details</button>
@@ -2918,7 +2832,7 @@ function App() {
               </div>
             </td>
             <td>
-              <span className="doc-status complete">Complete</span>
+              <span className="doc-status complete" style={{ backgroundColor: "#e8f5e9", color: "#4caf50", padding: "4px 8px", borderRadius: "15px", fontSize: "12px", fontWeight: "bold" }}>Complete</span>
             </td>
             <td>
               <div className="progress-container">
@@ -2946,62 +2860,12 @@ function App() {
           <tr>
             <td>
               <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ width: "8px", height: "8px", backgroundColor: "#ff9800", borderRadius: "50%", marginRight: "10px" }}></div>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#f44336", borderRadius: "50%", marginRight: "10px" }}></div>
                 <span>JetStream Engineering</span>
               </div>
             </td>
             <td>Component Suppliers</td>
             <td>Portland, OR, USA</td>
-            <td>
-              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ 
-                  width: "100px", 
-                  height: "10px", 
-                  backgroundColor: "#e0e0e0", 
-                  borderRadius: "5px", 
-                  overflow: "hidden",
-                  marginRight: "10px"
-                }}>
-                  <div style={{ width: "87%", height: "100%", backgroundColor: "#ff9800" }}></div>
-                </div>
-                <span>87</span>
-              </div>
-            </td>
-            <td>
-              <span className="doc-status partial">Partial</span>
-            </td>
-            <td>
-              <div className="progress-container">
-                <div className="progress-bar" style={{ 
-                  width: "150px", 
-                  height: "6px", 
-                  backgroundColor: "#e0e0e0", 
-                  borderRadius: "3px", 
-                  overflow: "hidden",
-                  marginRight: "10px"
-                }}>
-                  <div style={{ width: "40%", height: "100%", backgroundColor: "#e53935" }}></div>
-                </div>
-                <span style={{ fontSize: "12px" }}>40% - Document Verification</span>
-              </div>
-            </td>
-            <td>March 28, 2025</td>
-            <td>
-              <div className="action-buttons">
-                <button className="secondary small">Review</button>
-                <button className="primary small">Request Docs</button>
-              </div>
-            </td>
-          </tr>
-          <tr>
-            <td>
-              <div style={{ display: "flex", alignItems: "center" }}>
-                <div style={{ width: "8px", height: "8px", backgroundColor: "#f44336", borderRadius: "50%", marginRight: "10px" }}></div>
-                <span>AvionicsTech International</span>
-              </div>
-            </td>
-            <td>Services</td>
-            <td>Montreal, Canada</td>
             <td>
               <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
                 <div style={{ 
@@ -3018,7 +2882,7 @@ function App() {
               </div>
             </td>
             <td>
-              <span className="doc-status incomplete">Incomplete</span>
+              <span className="doc-status incomplete" style={{ backgroundColor: "#ffebee", color: "#f44336", padding: "4px 8px", borderRadius: "15px", fontSize: "12px", fontWeight: "bold" }}>Incomplete</span>
             </td>
             <td>
               <div className="progress-container">
@@ -3077,7 +2941,7 @@ function App() {
       </div>
     </div>
 
-    {/* Add New Trusted Vendor Form (toggle show/hide) */}
+    {/* Add New Trusted Vendor Form */}
     <div className="section-header" style={{ marginTop: "30px" }}>
       <h3>Add New Trusted Vendor</h3>
     </div>
@@ -3114,141 +2978,38 @@ function App() {
           <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Location *</label>
           <input type="text" placeholder="City, State, Country" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }} />
         </div>
-      </div>
-
-      {selectedPart && (
-        <div className="modal-overlay">
-          <div className="modal-content-wide">
-            {!showVendorForm ? (
-              <>
-                <h2>Material Specifications</h2>
-                <h3>{selectedPart.name}</h3>
-                <table>
-                  <tbody>
-                    {Object.entries(selectedPart.specs).map(([key, value]) => (
-                      <tr key={key}>
-                        <td><strong>{key}:</strong></td>
-                        <td>{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="modal-actions">
-                  <button onClick={() => setSelectedPart(null)} className="secondary">
-                    Close
-                  </button>
-                  <button className="primary" onClick={() => setShowVendorForm(true)}>
-                    Apply as Vendor
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <h2>Apply as Vendor for {selectedPart.name}</h2>
-                <div className="blockchain-note">
-                  <p>
-                    <strong>⛓️ Blockchain Integration:</strong> Your application will be securely recorded on the blockchain, 
-                    ensuring transparency and immutability.
-                  </p>
-                </div>
-                
-                <div className="vendor-form">
-                  <div className="form-group">
-                    <label>Company Name</label>
-                    <input 
-                      type="text" 
-                      name="companyName"
-                      value={vendorForm.companyName}
-                      onChange={handleVendorFormChange}
-                      placeholder="Your company name"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Contact Email</label>
-                    <input 
-                      type="email" 
-                      name="contactEmail"
-                      value={vendorForm.contactEmail}
-                      onChange={handleVendorFormChange}
-                      placeholder="business@example.com"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Phone Number</label>
-                    <input 
-                      type="tel" 
-                      name="phoneNumber"
-                      value={vendorForm.phoneNumber}
-                      onChange={handleVendorFormChange}
-                      placeholder="+1 234 567 8900"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Supplier Capacity (units/month)</label>
-                    <input 
-                      type="number" 
-                      name="supplierCapacity"
-                      value={vendorForm.supplierCapacity}
-                      onChange={handleVendorFormChange}
-                      placeholder="1000"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Certifications</label>
-                    <input 
-                      type="text" 
-                      name="certification"
-                      value={vendorForm.certification}
-                      onChange={handleVendorFormChange}
-                      placeholder="ISO 9001, AS9100, etc."
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Average Delivery Time (days)</label>
-                    <input 
-                      type="number" 
-                      name="deliveryTime"
-                      value={vendorForm.deliveryTime}
-                      onChange={handleVendorFormChange}
-                      placeholder="14"
-                    />
-                  </div>
-                </div>
-                
-                {txStatus && <div className="tx-status">{txStatus}</div>}
-                
-                <div className="blockchain-address">
-                  {account ? (
-                    <span>Connected Wallet: {account.substring(0, 6)}...{account.substring(account.length - 4)}</span>
-                  ) : (
-                    <span className="status-warning">No wallet connected. Please connect your Ethereum wallet.</span>
-                  )}
-                </div>
-                
-                <div className="modal-actions">
-                  <button onClick={() => setShowVendorForm(false)} className="secondary">
-                    Back
-                  </button>
-                  <button 
-                    className="primary" 
-                    onClick={handleVendorSubmit}
-                    disabled={!isBlockchainConnected}
-                  >
-                    {isBlockchainConnected ? "Submit to Blockchain" : "Connect Wallet First"}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
+        <div className="form-group">
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Certifications</label>
+          <input type="text" placeholder="e.g., ISO 9001, AS9100" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }} />
         </div>
-      )}
+      </div>
+      
+      <div style={{ marginTop: "25px", borderTop: "1px solid #eee", paddingTop: "20px", display: "flex", justifyContent: "flex-end" }}>
+        <button className="secondary" style={{ marginRight: "10px" }}>Cancel</button>
+        <button className="primary">Submit for Verification</button>
+      </div>
     </div>
-  );
-}
-
+    
+    {/* CSS for status elements */}
+    <style jsx>{`
+      .blockchain-verified {
+        background-color: #e8f5e9;
+        color: #4caf50;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+      }
+      button.small {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+    `}</style>
+  </>
+)}
 export default App;
