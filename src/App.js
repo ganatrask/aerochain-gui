@@ -487,222 +487,228 @@ function App() {
       </div>
 
       <div className="main-content">
-        {page === "overview-dashboard" && (
-          <div className="dashboard-overview">
-            <h2>Aerospace Procurement Analytics</h2>
-            
-            {/* Top KPIs row */}
-            <div className="kpi-row">
-              <div className="kpi-card">
-                <h3>Verified Vendors</h3>
-                <div className="kpi-value">24 <span className="blockchain-verified">⛓️</span></div>
-              </div>
-              <div className="kpi-card">
-                <h3>On-time Delivery</h3>
-                <div className="kpi-value">92%</div>
-              </div>
-              <div className="kpi-card">
-                <h3>Active Contracts</h3>
-                <div className="kpi-value">37</div>
-              </div>
-              <div className="kpi-card">
-                <h3>Inventory Value</h3>
-                <div className="kpi-value">$7.4M</div>
-                <div className="kpi-subtitle">Avg. Reorder Cost: $83.3K</div>
-              </div>
-            </div>
-            
-            {/* Order Tracking Section */}
-            <div className="section-header">
-              <h3>Ongoing Orders</h3>
-            </div>
-            <div className="data-table-container">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Part Name</th>
-                    <th>Vendor</th>
-                    <th>Quantity</th>
-                    <th>Delivery Date</th>
-                    <th>Progress</th>
-                    <th>Delivery Forecast</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ongoingOrders.map(order => (
-                    <tr key={order.id}>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === order.partName));}}>{order.partName}</a></td>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === order.companyName));}}>{order.companyName}</a></td>
-                      <td>{order.count.toLocaleString()}</td>
-                      <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
-                      <td>
-                        <div className="progress-bar-container">
-                          <div className="progress-bar" style={{width: `${order.progress}%`}}></div>
-                          <span className="progress-text">{order.progress}%</span>
-                        </div>
-                      </td>
-                      <td className={order.forecastDelivery.includes("Delayed") ? "delayed" : order.forecastDelivery.includes("Early") ? "early" : "on-time"}>
-                        {order.forecastDelivery}
-                      </td>
-                      <td>{order.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
+      {page === "overview-dashboard" && (
+  <div className="dashboard-overview">
+    <h2>Aerospace Procurement Analytics</h2>
+    
+    {/* Top KPIs row */}
+    <div className="kpi-row">
+      <div className="kpi-card">
+        <h3>Verified Vendors</h3>
+        <div className="kpi-value">24 <span className="blockchain-verified">⛓️</span></div>
+      </div>
+      <div className="kpi-card">
+        <h3>On-time Delivery</h3>
+        <div className="kpi-value">92%</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Active Contracts</h3>
+        <div className="kpi-value">37</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Inventory Value</h3>
+        <div className="kpi-value">$7.4M</div>
+        <div className="kpi-subtitle">Avg. Reorder Cost: $83.3K</div>
+      </div>
+    </div>
+    
+    {/* MOVED: Supplier Distribution and Inventory Levels first */}
+    <div className="section-header">
+      <h3>Inventory & Supplier Overview</h3>
+    </div>
+    <div className="charts-grid">
+      <div className="chart-container">
+        <h3>Supplier Distribution</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie
+              data={supplierDistributionData}
+              cx="50%"
+              cy="50%"
+              labelLine={true}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+              nameKey="name"
+              label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            >
+              {supplierDistributionData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'][index % 5]} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value) => `${value}%`} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div className="chart-container">
+        <h3>Inventory Levels</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={inventoryLevelsData} layout="vertical" margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis type="number" />
+            <YAxis dataKey="name" type="category" />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="value" fill="#82ca9d" name="Current Stock">
+              {inventoryLevelsData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={entry.value < entry.threshold ? '#ff8042' : '#82ca9d'} />
+              ))}
+            </Bar>
+            <Bar dataKey="threshold" fill="#8884d8" name="Min Threshold" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+    
+    {/* MOVED: Current Inventory Status Section next */}
+    <div className="section-header">
+      <h3>Current Inventory Status</h3>
+    </div>
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Part Name</th>
+            <th>Supplier</th>
+            <th>Current Count</th>
+            <th>Last Updated</th>
+            <th>Next Order Due</th>
+            <th>Inventory Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {currentInventory.map(item => (
+            <tr key={item.id}>
+              <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === item.partName));}}>{item.partName}</a></td>
+              <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === item.companyName));}}>{item.companyName}</a></td>
+              <td>{item.count.toLocaleString()}</td>
+              <td>{new Date(item.lastUpdate).toLocaleDateString()}</td>
+              <td>{new Date(item.nextOrderDue).toLocaleDateString()}</td>
+              <td className={item.count < item.minThreshold ? "low-inventory" : "good-inventory"}>
+                {item.count < item.minThreshold ? "Low Stock" : "Good"}
+              </td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    
+    {/* Order Tracking Section */}
+    <div className="section-header">
+      <h3>Ongoing Orders</h3>
+    </div>
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Part Name</th>
+            <th>Vendor</th>
+            <th>Quantity</th>
+            <th>Delivery Date</th>
+            <th>Progress</th>
+            <th>Delivery Forecast</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {ongoingOrders.map(order => (
+            <tr key={order.id}>
+              <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === order.partName));}}>{order.partName}</a></td>
+              <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === order.companyName));}}>{order.companyName}</a></td>
+              <td>{order.count.toLocaleString()}</td>
+              <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
+              <td>
+                <div className="progress-bar-container">
+                  <div className="progress-bar" style={{width: `${order.progress}%`}}></div>
+                  <span className="progress-text">{order.progress}%</span>
+                </div>
+              </td>
+              <td className={order.forecastDelivery.includes("Delayed") ? "delayed" : order.forecastDelivery.includes("Early") ? "early" : "on-time"}>
+                {order.forecastDelivery}
+              </td>
+              <td>{order.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
 
-            {/* Inventory Status Section */}
-            <div className="section-header">
-              <h3>Current Inventory Status</h3>
-            </div>
-            <div className="data-table-container">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Part Name</th>
-                    <th>Supplier</th>
-                    <th>Current Count</th>
-                    <th>Last Updated</th>
-                    <th>Next Order Due</th>
-                    <th>Inventory Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentInventory.map(item => (
-                    <tr key={item.id}>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === item.partName));}}>{item.partName}</a></td>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === item.companyName));}}>{item.companyName}</a></td>
-                      <td>{item.count.toLocaleString()}</td>
-                      <td>{new Date(item.lastUpdate).toLocaleDateString()}</td>
-                      <td>{new Date(item.nextOrderDue).toLocaleDateString()}</td>
-                      <td className={item.count < item.minThreshold ? "low-inventory" : "good-inventory"}>
-                        {item.count < item.minThreshold ? "Low Stock" : "Good"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Charts section */}
-            <div className="section-header">
-              <h3>Performance Analytics</h3>
-            </div>
-            <div className="charts-grid">
-              <div className="chart-container large">
-                <h3>Vendor Performance Timeline</h3>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={vendorPerformanceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="onTime" stroke="#8884d8" name="On-time Delivery %" />
-                    <Line type="monotone" dataKey="quality" stroke="#82ca9d" name="Quality Score" />
-                    <Line type="monotone" dataKey="blockchain" stroke="#ffc658" name="Blockchain Verified %" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Blockchain Contract Activity</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={blockchainActivityData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="contracts" fill="#8884d8" name="New Contracts" />
-                    <Bar dataKey="verifications" fill="#82ca9d" name="Verifications" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Inventory Levels</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={inventoryLevelsData} layout="vertical" margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#82ca9d" name="Current Stock">
-                      {inventoryLevelsData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.value < entry.threshold ? '#ff8042' : '#82ca9d'} />
-                      ))}
-                    </Bar>
-                    <Bar dataKey="threshold" fill="#8884d8" name="Min Threshold" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Lead Time Analysis</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={leadTimeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="vendor" />
-                    <YAxis label={{ value: 'Days', angle: -90, position: 'insideLeft' }} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="quoted" fill="#8884d8" name="Quoted Lead Time" />
-                    <Bar dataKey="actual" fill="#82ca9d" name="Actual Lead Time" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Supplier Distribution</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={supplierDistributionData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      nameKey="name"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {supplierDistributionData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'][index % 5]} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `${value}%`} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            
-            <div className="blockchain-status-panel">
-              <h3>⛓️ Blockchain Network Status</h3>
-              <div className="status-grid">
-                <div className="status-item">
-                  <span className="status-label">Network:</span>
-                  <span className="status-value">Ethereum Mainnet</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Connected Account:</span>
-                  <span className="status-value">{account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : "Not connected"}</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Smart Contract:</span>
-                  <span className="status-value">VendorRegistry</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Connection Status:</span>
-                  <span className="status-value">{isBlockchainConnected ? "Connected ✅" : "Disconnected ❌"}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
+    {/* Charts section - remaining charts */}
+    <div className="section-header">
+      <h3>Performance Analytics</h3>
+    </div>
+    <div className="charts-grid">
+      <div className="chart-container large">
+        <h3>Vendor Performance Timeline</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={vendorPerformanceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="onTime" stroke="#8884d8" name="On-time Delivery %" />
+            <Line type="monotone" dataKey="quality" stroke="#82ca9d" name="Quality Score" />
+            <Line type="monotone" dataKey="blockchain" stroke="#ffc658" name="Blockchain Verified %" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div className="chart-container">
+        <h3>Blockchain Contract Activity</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={blockchainActivityData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="contracts" fill="#8884d8" name="New Contracts" />
+            <Bar dataKey="verifications" fill="#82ca9d" name="Verifications" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div className="chart-container">
+        <h3>Lead Time Analysis</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={leadTimeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="vendor" />
+            <YAxis label={{ value: 'Days', angle: -90, position: 'insideLeft' }} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="quoted" fill="#8884d8" name="Quoted Lead Time" />
+            <Bar dataKey="actual" fill="#82ca9d" name="Actual Lead Time" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+    
+    <div className="blockchain-status-panel">
+      <h3>⛓️ Blockchain Network Status</h3>
+      <div className="status-grid">
+        <div className="status-item">
+          <span className="status-label">Network:</span>
+          <span className="status-value">Ethereum Mainnet</span>
+        </div>
+        <div className="status-item">
+          <span className="status-label">Connected Account:</span>
+          <span className="status-value">{account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : "Not connected"}</span>
+        </div>
+        <div className="status-item">
+          <span className="status-label">Smart Contract:</span>
+          <span className="status-value">VendorRegistry</span>
+        </div>
+        <div className="status-item">
+          <span className="status-label">Connection Status:</span>
+          <span className="status-value">{isBlockchainConnected ? "Connected ✅" : "Disconnected ❌"}</span>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         
         {page === "dashboard" && (
           <>
