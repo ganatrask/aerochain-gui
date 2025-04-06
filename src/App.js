@@ -68,79 +68,7 @@ function App() {
   const [vendorControlOpen, setVendorControlOpen] = useState(false);
   const [showVendorForm, setShowVendorForm] = useState(false);
 
-  // Sample vendors data
-  const vendors = [
-    { id: 1, name: "AeroTech Industries", rating: 4.8, location: "Seattle, WA", blockchain: true, activeContracts: 12, contactPerson: "John Smith", email: "jsmith@aerotech.com", phone: "206-555-1234", deliveryPerformance: 98, qualityScore: 95, avgLeadTime: 14 },
-    { id: 2, name: "TitaniumPro Supplies", rating: 4.5, location: "Phoenix, AZ", blockchain: true, activeContracts: 8, contactPerson: "Sarah Johnson", email: "sjohnson@titanium.com", phone: "480-555-9876", deliveryPerformance: 92, qualityScore: 97, avgLeadTime: 18 },
-    { id: 3, name: "Global Aero Components", rating: 4.2, location: "Dallas, TX", blockchain: true, activeContracts: 5, contactPerson: "David Williams", email: "dwilliams@globalaero.com", phone: "214-555-4321", deliveryPerformance: 89, qualityScore: 90, avgLeadTime: 21 },
-    { id: 4, name: "Precision Aerospace", rating: 4.7, location: "Boston, MA", blockchain: false, activeContracts: 3, contactPerson: "Michelle Brown", email: "mbrown@precision.com", phone: "617-555-7890", deliveryPerformance: 94, qualityScore: 93, avgLeadTime: 16 },
-  ];
-  
-  // Sample ongoing orders
-  const ongoingOrders = [
-    { id: 1, partName: "Turbofan Blade", companyName: "AeroTech Industries", count: 500, orderDate: "2025-03-15", deliveryDate: "2025-04-20", progress: 65, forecastDelivery: "On time", status: "In Production" },
-    { id: 2, partName: "Actuator Arm", companyName: "TitaniumPro Supplies", count: 300, orderDate: "2025-03-10", deliveryDate: "2025-04-15", progress: 80, forecastDelivery: "Early (Apr 12)", status: "Final Testing" },
-    { id: 3, partName: "Landing Gear Shaft", companyName: "Global Aero Components", count: 150, orderDate: "2025-03-20", deliveryDate: "2025-04-25", progress: 40, forecastDelivery: "Delayed (May 2)", status: "Production" },
-    { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 800, orderDate: "2025-03-01", deliveryDate: "2025-04-10", progress: 95, forecastDelivery: "On time", status: "Quality Control" },
-  ];
-  
-  // Sample current inventory with cost data
-  const currentInventory = [
-    { id: 1, partName: "Turbofan Blade", companyName: "AeroTech Industries", count: 1250, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-30", minThreshold: 1000, unitCost: 3200, reorderCost: 150000, leadTime: 14 },
-    { id: 2, partName: "Actuator Arm", companyName: "TitaniumPro Supplies", count: 450, lastUpdate: "2025-04-03", nextOrderDue: "2025-04-15", minThreshold: 400, unitCost: 850, reorderCost: 42000, leadTime: 10 },
-    { id: 3, partName: "Landing Gear Shaft", companyName: "Global Aero Components", count: 180, lastUpdate: "2025-04-01", nextOrderDue: "2025-04-10", minThreshold: 200, unitCost: 4500, reorderCost: 90000, leadTime: 21 },
-    { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 780, lastUpdate: "2025-04-05", nextOrderDue: "2025-05-15", minThreshold: 500, unitCost: 320, reorderCost: 25000, leadTime: 7 },
-    { id: 5, partName: "Servo Bracket Assembly", companyName: "AeroTech Industries", count: 620, lastUpdate: "2025-04-04", nextOrderDue: "2025-04-20", minThreshold: 400, unitCost: 275, reorderCost: 18000, leadTime: 8 },
-    { id: 6, partName: "Composite Fuselage Panel", companyName: "Global Aero Components", count: 320, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-12", minThreshold: 300, unitCost: 5800, reorderCost: 175000, leadTime: 30 },
-  ];
-  
-  // Sample vendor performance data for charts
-  const vendorPerformanceData = [
-    { month: 'Nov', onTime: 85, quality: 88, blockchain: 60 },
-    { month: 'Dec', onTime: 87, quality: 89, blockchain: 65 },
-    { month: 'Jan', onTime: 89, quality: 91, blockchain: 72 },
-    { month: 'Feb', onTime: 91, quality: 93, blockchain: 78 },
-    { month: 'Mar', onTime: 93, quality: 94, blockchain: 85 },
-    { month: 'Apr', onTime: 92, quality: 95, blockchain: 90 },
-  ];
-  
-  // Sample blockchain activity data
-  const blockchainActivityData = [
-    { month: 'Nov', contracts: 8, verifications: 12 },
-    { month: 'Dec', contracts: 15, verifications: 18 },
-    { month: 'Jan', contracts: 22, verifications: 25 },
-    { month: 'Feb', contracts: 28, verifications: 32 },
-    { month: 'Mar', contracts: 35, verifications: 40 },
-    { month: 'Apr', contracts: 42, verifications: 45 },
-  ];
-  
-  // Sample inventory data
-  const inventoryLevelsData = [
-    { name: 'Turbofan Blade', value: 1250, threshold: 1000 },
-    { name: 'Actuator Arm', value: 450, threshold: 400 },
-    { name: 'Landing Gear Shaft', value: 180, threshold: 200 },
-    { name: 'Avionics Heat Sink', value: 780, threshold: 500 },
-    { name: 'Servo Bracket', value: 620, threshold: 400 },
-    { name: 'Fuselage Panel', value: 320, threshold: 300 },
-  ];
-  
-  // Sample lead time data
-  const leadTimeData = [
-    { vendor: 'AeroTech', quoted: 14, actual: 15 },
-    { vendor: 'TitaniumPro', quoted: 18, actual: 17 },
-    { vendor: 'Global Aero', quoted: 21, actual: 23 },
-    { vendor: 'Precision', quoted: 16, actual: 16 },
-  ];
-  
-  // Sample supplier distribution data
-  const supplierDistributionData = [
-    { name: 'West Coast', value: 35 },
-    { name: 'Midwest', value: 20 },
-    { name: 'East Coast', value: 25 },
-    { name: 'South', value: 15 },
-    { name: 'International', value: 5 },
-  ];
-
+  // Enhanced Buyers Data - 15 aerospace parts
   const parts = [
     {
       id: 1,
@@ -298,703 +226,189 @@ function App() {
         Availability: "In stock for limited runs",
         "Lead Time": "7–10 business days",
       }
-    },    
-  ];
-  
-  // New data structures from App(1).js
-  const orders = [
-    { id: "#001", item: "Servo Bracket", qty: 100, status: "Shipped" },
-    { id: "#002", item: "Heat Sink", qty: 50, status: "Pending" },
-  ];
-
-  const completedOrders = [
-    { id: "#12345", rating: 5, comments: "Great service!" },
-  ];
-  
-  // State for selected vendor or part details
-  const [selectedVendor, setSelectedVendor] = useState(null);
-  const [selectedInventoryPart, setSelectedInventoryPart] = useState(null);
-  
-  // Initialize Web3 connection
-  useEffect(() => {
-    const initWeb3 = async () => {
-      if (window.ethereum) {
-        try {
-          // Request account access
-          await window.ethereum.request({ method: 'eth_requestAccounts' });
-          const web3Instance = new Web3(window.ethereum);
-          setWeb3(web3Instance);
-          
-          // Get connected account
-          const accounts = await web3Instance.eth.getAccounts();
-          setAccount(accounts[0]);
-          
-          // Connect to smart contract (replace with your contract address)
-          const contractAddress = "0x1234567890123456789012345678901234567890"; // Example address
-          const contractInstance = new web3Instance.eth.Contract(
-            vendorRegistryABI,
-            contractAddress
-          );
-          setContract(contractInstance);
-          setIsBlockchainConnected(true);
-        } catch (error) {
-          console.error("User denied account access or error occurred:", error);
-        }
-      } else {
-        console.log("Please install MetaMask or another Ethereum wallet provider.");
+    },
+    {
+      id: 9,
+      name: "Hydraulic Control Valve",
+      material: "Inconel 718",
+      lastUpdated: "7 days ago",
+      status: "Public",
+      specs: {
+        Design: "Proportional flow control valve with high pressure tolerance",
+        "Max Pressure": "350 bar",
+        "Flow Rate": "120 L/min",
+        "Temperature Range": "-30°C to 150°C",
+        Applications: "Landing gear systems, flight controls",
+        Certifications: "DO-160, MIL-STD-810",
+        Availability: "Made to order",
+        "Lead Time": "4 weeks",
       }
-    };
-    
-    initWeb3();
-  }, []);
-
-  const handleLogin = () => {
-    if (form.email && form.password) {
-      setIsLoggedIn(true);
-    } else {
-      alert("Please enter both email and password.");
+    },
+    {
+      id: 10,
+      name: "Airframe Fastener Set",
+      material: "Titanium Ti-6Al-4V",
+      lastUpdated: "2 days ago",
+      status: "Public",
+      specs: {
+        Design: "Lightweight aerospace-grade fasteners with various head types",
+        Quantitative: "Tensile strength - 900 MPa",
+        "Type of Material": "Titanium alloy (Grade 5)",
+        "Corrosion Resistance": "Excellent",
+        "Weight Reduction": "40% compared to steel fasteners",
+        Applications: "Wing-to-fuselage connections, panel mounting",
+        Certifications: "NAS, MS, BAC standards",
+        "Surface Treatment": "Passivated",
+        Availability: "In stock",
+        "Lead Time": "1 week",
+      }
+    },
+    {
+      id: 11,
+      name: "Electronic Flight Computer",
+      material: "Multi-layer PCB with Aluminum Housing",
+      lastUpdated: "Yesterday",
+      status: "Private",
+      specs: {
+        Design: "Triple-redundant flight control computer",
+        Processor: "ARM Cortex-R5F (400MHz)",
+        Memory: "4GB ECC RAM, 32GB Flash",
+        "Power Consumption": "15W nominal",
+        "Environmental Rating": "IP65, MIL-STD-810G",
+        Certifications: "DO-254, DO-178C Level A",
+        Applications: "Primary flight control, fly-by-wire systems",
+        Availability: "12 week lead time",
+        "Special Requirements": "ITAR controlled",
+      }
+    },
+    {
+      id: 12,
+      name: "Composite Wing Spar",
+      material: "Carbon Fiber/Epoxy Composite",
+      lastUpdated: "5 days ago",
+      status: "Public",
+      specs: {
+        Design: "I-beam construction with unidirectional carbon fiber reinforcement",
+        "Tensile Strength": "1200 MPa",
+        "Flexural Modulus": "140 GPa",
+        Weight: "65% lighter than aluminum equivalent",
+        "Fatigue Performance": "Excellent resistance to cyclic loading",
+        Applications: "Primary wing structure, UAV construction",
+        Certifications: "AS9100D, NADCAP AC7118",
+        "Testing": "100% ultrasonic inspection",
+        Availability: "Custom manufacturing",
+        "Lead Time": "8-10 weeks",
+      }
+    },
+    {
+      id: 13,
+      name: "Anti-Ice Heating Element",
+      material: "Nickel-Chromium Alloy",
+      lastUpdated: "3 days ago",
+      status: "Public",
+      specs: {
+        Design: "Thin-film resistive heating element with embedded sensors",
+        "Power Density": "2.5 W/cm²",
+        "Operating Voltage": "28V DC",
+        "Temperature Range": "-60°C to 200°C",
+        "Response Time": "< 5 seconds to full heat",
+        Applications: "Wing leading edges, engine inlets, pitot tubes",
+        Certifications: "SAE AMS 2750F",
+        Availability: "Made to specification",
+        "Lead Time": "3-4 weeks",
+      }
+    },
+    {
+      id: 14,
+      name: "Fuel System Sensor Package",
+      material: "316 Stainless Steel with PTFE",
+      lastUpdated: "Today",
+      status: "Private",
+      specs: {
+        Design: "Integrated fuel level, temperature, and density sensors",
+        "Accuracy": "±0.5% for level, ±1°C for temperature",
+        "Output": "ARINC 429 protocol",
+        "Operating Pressure": "0-10 bar",
+        "Fuel Compatibility": "Jet A, Jet A-1, JP-8",
+        Applications: "Aircraft fuel tanks, fuel management systems",
+        Certifications: "DO-160G, ATEX",
+        "MTBF": "> 50,000 hours",
+        Availability: "In production",
+        "Lead Time": "6 weeks",
+      }
+    },
+    {
+      id: 15,
+      name: "Cabin Air Filtration System",
+      material: "Aluminum/Composite Housing with HEPA Media",
+      lastUpdated: "4 days ago",
+      status: "Public",
+      specs: {
+        Design: "Multi-stage filtration with UV sterilization",
+        "Filtration Efficiency": "99.97% of particles ≥ 0.3µm",
+        "Air Flow Rate": "500 CFM",
+        "Pressure Drop": "< 0.5 inH₂O at rated flow",
+        "Life Span": "3,000 flight hours",
+        Applications: "Commercial aircraft cabin air systems",
+        Certifications: "SAE ARP1796, EASA CS-25",
+        Availability: "In stock",
+        "Lead Time": "2 weeks",
+      }
     }
-  };
-  
-  const handleVendorFormChange = (e) => {
-    setVendorForm({
-      ...vendorForm,
-      [e.target.name]: e.target.value
-    });
-  };
-  
-  const handleVendorSubmit = async () => {
-    if (!isBlockchainConnected) {
-      alert("Please connect to blockchain first");
-      return;
-    }
-    
-    setTxStatus("Submitting to blockchain...");
-    
-    try {
-      // Call the smart contract function
-      await contract.methods.registerVendor(
-        vendorForm.companyName,
-        selectedPart.id.toString(),
-        JSON.stringify({
-          email: vendorForm.contactEmail,
-          phone: vendorForm.phoneNumber,
-          capacity: vendorForm.supplierCapacity,
-          certification: vendorForm.certification,
-          deliveryTime: vendorForm.deliveryTime
-        })
-      ).send({ from: account });
-      
-      setTxStatus("Successfully registered on blockchain!");
-      setTimeout(() => {
-        setSelectedPart(null);
-        setTxStatus("");
-      }, 3000);
-    } catch (error) {
-      console.error("Transaction failed:", error);
-      setTxStatus("Transaction failed. See console for details.");
-    }
-  };
+  ];
 
-  if (!isLoggedIn) {
-    return (
-      <div className="auth-container">
-        <div className="auth-left">
-          <h1>Welcome to Our Blockchain-Powered Procurement Platform</h1>
-        </div>
+  // Enhanced Orders Data - 15 entries
+  const orders = [
+    { id: "#ORD-001", item: "Servo Bracket Assembly", qty: 100, vendor: "AeroTech Industries", date: "2025-03-10", status: "Shipped", deliveryDate: "2025-04-15", trackingNum: "AT728495620" },
+    { id: "#ORD-002", item: "Avionics Heat Sink", qty: 50, vendor: "Precision Aerospace", date: "2025-03-15", status: "Pending", deliveryDate: "2025-04-20", trackingNum: "Pending" },
+    { id: "#ORD-003", item: "Landing Gear Shaft", qty: 25, vendor: "Global Aero Components", date: "2025-03-18", status: "In Production", deliveryDate: "2025-04-22", trackingNum: "Pending" },
+    { id: "#ORD-004", item: "Turbofan Blade", qty: 150, vendor: "AeroTech Industries", date: "2025-03-05", status: "Shipped", deliveryDate: "2025-04-10", trackingNum: "AT728392018" },
+    { id: "#ORD-005", item: "Flight Control Linkage", qty: 75, vendor: "TitaniumPro Supplies", date: "2025-03-12", status: "Quality Check", deliveryDate: "2025-04-18", trackingNum: "Pending" },
+    { id: "#ORD-006", item: "Composite Fuselage Panel", qty: 30, vendor: "Global Aero Components", date: "2025-03-20", status: "Pending", deliveryDate: "2025-04-25", trackingNum: "Pending" },
+    { id: "#ORD-007", item: "High-Precision Gearbox", qty: 15, vendor: "Precision Aerospace", date: "2025-03-08", status: "Shipped", deliveryDate: "2025-04-12", trackingNum: "PA65432987" },
+    { id: "#ORD-008", item: "Hydraulic Control Valve", qty: 40, vendor: "TitaniumPro Supplies", date: "2025-03-17", status: "In Production", deliveryDate: "2025-04-28", trackingNum: "Pending" },
+    { id: "#ORD-009", item: "Airframe Fastener Set", qty: 500, vendor: "AeroTech Industries", date: "2025-03-22", status: "Pending", deliveryDate: "2025-04-30", trackingNum: "Pending" },
+    { id: "#ORD-010", item: "Electronic Flight Computer", qty: 10, vendor: "Precision Aerospace", date: "2025-03-01", status: "Shipped", deliveryDate: "2025-04-05", trackingNum: "PA65487321" },
+    { id: "#ORD-011", item: "Composite Wing Spar", qty: 8, vendor: "Global Aero Components", date: "2025-03-25", status: "Material Sourcing", deliveryDate: "2025-05-10", trackingNum: "Pending" },
+    { id: "#ORD-012", item: "Anti-Ice Heating Element", qty: 60, vendor: "TitaniumPro Supplies", date: "2025-03-14", status: "Quality Check", deliveryDate: "2025-04-18", trackingNum: "Pending" },
+    { id: "#ORD-013", item: "Fuel System Sensor Package", qty: 25, vendor: "Precision Aerospace", date: "2025-03-19", status: "In Production", deliveryDate: "2025-04-25", trackingNum: "Pending" },
+    { id: "#ORD-014", item: "Cabin Air Filtration System", qty: 12, vendor: "AeroTech Industries", date: "2025-03-09", status: "Shipped", deliveryDate: "2025-04-15", trackingNum: "AT728496735" },
+    { id: "#ORD-015", item: "Actuator Arm", qty: 35, vendor: "TitaniumPro Supplies", date: "2025-03-28", status: "Pending", deliveryDate: "2025-05-05", trackingNum: "Pending" }
+  ];
 
-        <div className="auth-right">
-          <div className="auth-card">
-            <div className="auth-tabs">
-              <button
-                className={isLogin ? "active" : ""}
-                onClick={() => setIsLogin(true)}
-              >
-                Login
-              </button>
-              <button
-                className={!isLogin ? "active" : ""}
-                onClick={() => setIsLogin(false)}
-              >
-                Sign Up
-              </button>
-            </div>
+  // Enhanced Inventory Management for Orders page
+  const inventory = [
+    { id: 1, name: "Turbofan Blade", qty: 1250, location: "Warehouse A, Row 15, Shelf 3", lastUpdated: "2025-04-02", minLevel: 1000, onOrder: 150 },
+    { id: 2, name: "Actuator Arm", qty: 450, location: "Warehouse A, Row 8, Shelf 1", lastUpdated: "2025-04-03", minLevel: 400, onOrder: 35 },
+    { id: 3, name: "Landing Gear Shaft", qty: 180, location: "Warehouse B, Row 3, Shelf 2", lastUpdated: "2025-04-01", minLevel: 200, onOrder: 25 },
+    { id: 4, name: "Avionics Heat Sink", qty: 780, location: "Warehouse A, Row 10, Shelf 4", lastUpdated: "2025-04-05", minLevel: 500, onOrder: 50 },
+    { id: 5, name: "Servo Bracket Assembly", qty: 620, location: "Warehouse A, Row 5, Shelf 2", lastUpdated: "2025-04-04", minLevel: 400, onOrder: 100 },
+    { id: 6, name: "Composite Fuselage Panel", qty: 320, location: "Warehouse C, Row 2, Shelf 1", lastUpdated: "2025-04-02", minLevel: 300, onOrder: 30 },
+    { id: 7, name: "Flight Control Linkage", qty: 280, location: "Warehouse B, Row 6, Shelf 3", lastUpdated: "2025-04-05", minLevel: 250, onOrder: 75 },
+    { id: 8, name: "High-Precision Gearbox", qty: 95, location: "Warehouse B, Row 4, Shelf 2", lastUpdated: "2025-04-03", minLevel: 80, onOrder: 15 },
+    { id: 9, name: "Hydraulic Control Valve", qty: 120, location: "Warehouse C, Row 3, Shelf 3", lastUpdated: "2025-04-04", minLevel: 100, onOrder: 40 },
+    { id: 10, name: "Airframe Fastener Set", qty: 3500, location: "Warehouse A, Row 2, Shelf 1", lastUpdated: "2025-04-02", minLevel: 3000, onOrder: 500 },
+    { id: 11, name: "Electronic Flight Computer", qty: 25, location: "Secure Storage, Cabinet 2", lastUpdated: "2025-04-06", minLevel: 20, onOrder: 10 },
+    { id: 12, name: "Composite Wing Spar", qty: 18, location: "Warehouse C, Row 1, Shelf 1", lastUpdated: "2025-04-01", minLevel: 15, onOrder: 8 },
+    { id: 13, name: "Anti-Ice Heating Element", qty: 210, location: "Warehouse B, Row 7, Shelf 4", lastUpdated: "2025-04-03", minLevel: 150, onOrder: 60 },
+    { id: 14, name: "Fuel System Sensor Package", qty: 65, location: "Warehouse B, Row 8, Shelf 1", lastUpdated: "2025-04-05", minLevel: 50, onOrder: 25 },
+    { id: 15, name: "Cabin Air Filtration System", qty: 32, location: "Warehouse A, Row 12, Shelf 2", lastUpdated: "2025-04-02", minLevel: 30, onOrder: 12 }
+  ];
 
-            {isLogin ? (
-              <>
-                <input
-                  type="email"
-                  placeholder="Email"
-                  onChange={(e) =>
-                    setForm({ ...form, email: e.target.value })
-                  }
-                />
-                <input
-                  type="password"
-                  placeholder="Password"
-                  onChange={(e) =>
-                    setForm({ ...form, password: e.target.value })
-                  }
-                />
-                <div className="forgot">Forgot password?</div>
-                <button className="primary" onClick={handleLogin}>
-                  Login
-                </button>
-                <button className="secondary">Continue with Google</button>
-              </>
-            ) : (
-              <>
-                <input type="text" placeholder="Full Name" />
-                <input type="email" placeholder="Email" />
-                <input type="tel" placeholder="Phone Number" />
-                <input type="password" placeholder="Password" />
-                <button className="primary" onClick={handleLogin}>
-                  Register
-                </button>
-              </>
-            )}
-          </div>
-        </div>
-      </div>
-    );
-  }
-
-  return (
-    <div className="dashboard-container">
-      <div className="sidebar">
-        <h2>{page === "vendors" ? "Performance Dashboard" : "Dashboard"}</h2>
-        <ul>
-          <li onClick={() => setPage("overview-dashboard")}>📊 Analytics Dashboard</li>
-          <li onClick={() => setPage("dashboard")}>👥 Buyers</li>
-          <li onClick={() => setPage("orders")}>📦 Orders</li>
-          <li onClick={() => setPage("vendors")}>🏭 Vendors</li>
-          <li onClick={() => setVendorControlOpen(!vendorControlOpen)}>
-            🛠 Vendor Control {vendorControlOpen ? "▾" : "▸"}
-          </li>
-          {vendorControlOpen && (
-            <ul className="sub-menu">
-              <li onClick={() => { setPage("vendor-control"); setSubPage("bids"); }}>📩 Bids</li>
-              <li onClick={() => { setPage("vendor-control"); setSubPage("followups"); }}>⏰ Follow Ups</li>
-              <li onClick={() => { setPage("vendor-control"); setSubPage("trusted"); }}>⭐ Trusted Sources</li>
-            </ul>
-          )}
-          <li>⛓️ Blockchain Status: {isBlockchainConnected ? 
-              <span className="status-connected">Connected</span> : 
-              <span className="status-disconnected">Disconnected</span>}
-          </li>
-          {account && <li className="account-info">🔑 {account.substring(0, 6)}...{account.substring(account.length - 4)}</li>}
-        </ul>
-      </div>
-
-      <div className="main-content">
-        {page === "overview-dashboard" && (
-          <div className="dashboard-overview">
-            <h2>Aerospace Procurement Analytics</h2>
-            
-            {/* Top KPIs row */}
-            <div className="kpi-row">
-              <div className="kpi-card">
-                <h3>Verified Vendors</h3>
-                <div className="kpi-value">24 <span className="blockchain-verified">⛓️</span></div>
-              </div>
-              <div className="kpi-card">
-                <h3>On-time Delivery</h3>
-                <div className="kpi-value">92%</div>
-              </div>
-              <div className="kpi-card">
-                <h3>Active Contracts</h3>
-                <div className="kpi-value">37</div>
-              </div>
-              <div className="kpi-card">
-                <h3>Inventory Value</h3>
-                <div className="kpi-value">$7.4M</div>
-                <div className="kpi-subtitle">Avg. Reorder Cost: $83.3K</div>
-              </div>
-            </div>
-            
-            {/* Order Tracking Section */}
-            <div className="section-header">
-              <h3>Ongoing Orders</h3>
-            </div>
-            <div className="data-table-container">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Part Name</th>
-                    <th>Vendor</th>
-                    <th>Quantity</th>
-                    <th>Delivery Date</th>
-                    <th>Progress</th>
-                    <th>Delivery Forecast</th>
-                    <th>Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {ongoingOrders.map(order => (
-                    <tr key={order.id}>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === order.partName));}}>{order.partName}</a></td>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === order.companyName));}}>{order.companyName}</a></td>
-                      <td>{order.count.toLocaleString()}</td>
-                      <td>{new Date(order.deliveryDate).toLocaleDateString()}</td>
-                      <td>
-                        <div className="progress-bar-container">
-                          <div className="progress-bar" style={{width: `${order.progress}%`}}></div>
-                          <span className="progress-text">{order.progress}%</span>
-                        </div>
-                      </td>
-                      <td className={order.forecastDelivery.includes("Delayed") ? "delayed" : order.forecastDelivery.includes("Early") ? "early" : "on-time"}>
-                        {order.forecastDelivery}
-                      </td>
-                      <td>{order.status}</td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Inventory Status Section */}
-            <div className="section-header">
-              <h3>Current Inventory Status</h3>
-            </div>
-            <div className="data-table-container">
-              <table className="data-table">
-                <thead>
-                  <tr>
-                    <th>Part Name</th>
-                    <th>Supplier</th>
-                    <th>Current Count</th>
-                    <th>Last Updated</th>
-                    <th>Next Order Due</th>
-                    <th>Inventory Status</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {currentInventory.map(item => (
-                    <tr key={item.id}>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedInventoryPart(parts.find(p => p.name === item.partName));}}>{item.partName}</a></td>
-                      <td><a href="#" onClick={(e) => {e.preventDefault(); setSelectedVendor(vendors.find(v => v.name === item.companyName));}}>{item.companyName}</a></td>
-                      <td>{item.count.toLocaleString()}</td>
-                      <td>{new Date(item.lastUpdate).toLocaleDateString()}</td>
-                      <td>{new Date(item.nextOrderDue).toLocaleDateString()}</td>
-                      <td className={item.count < item.minThreshold ? "low-inventory" : "good-inventory"}>
-                        {item.count < item.minThreshold ? "Low Stock" : "Good"}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-
-            {/* Charts section */}
-            <div className="section-header">
-              <h3>Performance Analytics</h3>
-            </div>
-            <div className="charts-grid">
-              <div className="chart-container large">
-                <h3>Vendor Performance Timeline</h3>
-                <ResponsiveContainer width="100%" height={250}>
-                  <LineChart data={vendorPerformanceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Line type="monotone" dataKey="onTime" stroke="#8884d8" name="On-time Delivery %" />
-                    <Line type="monotone" dataKey="quality" stroke="#82ca9d" name="Quality Score" />
-                    <Line type="monotone" dataKey="blockchain" stroke="#ffc658" name="Blockchain Verified %" />
-                  </LineChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Blockchain Contract Activity</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={blockchainActivityData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="month" />
-                    <YAxis />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="contracts" fill="#8884d8" name="New Contracts" />
-                    <Bar dataKey="verifications" fill="#82ca9d" name="Verifications" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Inventory Levels</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={inventoryLevelsData} layout="vertical" margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis type="number" />
-                    <YAxis dataKey="name" type="category" />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="value" fill="#82ca9d" name="Current Stock">
-                      {inventoryLevelsData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={entry.value < entry.threshold ? '#ff8042' : '#82ca9d'} />
-                      ))}
-                    </Bar>
-                    <Bar dataKey="threshold" fill="#8884d8" name="Min Threshold" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Lead Time Analysis</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <BarChart data={leadTimeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
-                    <CartesianGrid strokeDasharray="3 3" />
-                    <XAxis dataKey="vendor" />
-                    <YAxis label={{ value: 'Days', angle: -90, position: 'insideLeft' }} />
-                    <Tooltip />
-                    <Legend />
-                    <Bar dataKey="quoted" fill="#8884d8" name="Quoted Lead Time" />
-                    <Bar dataKey="actual" fill="#82ca9d" name="Actual Lead Time" />
-                  </BarChart>
-                </ResponsiveContainer>
-              </div>
-              
-              <div className="chart-container">
-                <h3>Supplier Distribution</h3>
-                <ResponsiveContainer width="100%" height={200}>
-                  <PieChart>
-                    <Pie
-                      data={supplierDistributionData}
-                      cx="50%"
-                      cy="50%"
-                      labelLine={true}
-                      outerRadius={80}
-                      fill="#8884d8"
-                      dataKey="value"
-                      nameKey="name"
-                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
-                    >
-                      {supplierDistributionData.map((entry, index) => (
-                        <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'][index % 5]} />
-                      ))}
-                    </Pie>
-                    <Tooltip formatter={(value) => `${value}%`} />
-                  </PieChart>
-                </ResponsiveContainer>
-              </div>
-            </div>
-            
-            <div className="blockchain-status-panel">
-              <h3>⛓️ Blockchain Network Status</h3>
-              <div className="status-grid">
-                <div className="status-item">
-                  <span className="status-label">Network:</span>
-                  <span className="status-value">Ethereum Mainnet</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Connected Account:</span>
-                  <span className="status-value">{account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : "Not connected"}</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Smart Contract:</span>
-                  <span className="status-value">VendorRegistry</span>
-                </div>
-                <div className="status-item">
-                  <span className="status-label">Connection Status:</span>
-                  <span className="status-value">{isBlockchainConnected ? "Connected ✅" : "Disconnected ❌"}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
-        
-        {page === "dashboard" && (
-          <>
-            <div className="header-banner">
-              <h2>Aerospace Part Catalog</h2>
-              <div className="blockchain-indicator">
-                {isBlockchainConnected ? 
-                  <span className="blockchain-connected">⛓️ Blockchain Connected</span> : 
-                  <span className="blockchain-disconnected">⛓️ Connect Wallet</span>}
-              </div>
-            </div>
-            
-            {parts.map((part) => (
-              <div className="buyer-card" key={part.id}>
-                <h3>{part.name}</h3>
-                <p>
-                  <strong>Material:</strong> {part.material}
-                </p>
-                <p>
-                  <strong>Last Updated:</strong> {part.lastUpdated}
-                </p>
-                <p>
-                  <strong>Status:</strong> {part.status}
-                </p>
-                <button onClick={() => setSelectedPart(part)}>More Info</button>
-              </div>
-            ))}
-          </>
-        )}
-
-        {page === "orders" && (
-          <>
-            <h2>Upload Inventory</h2>
-            <div className="upload-box">Drag and drop or click to upload XLS/CSV files</div>
-            <h3 style={{ marginTop: "30px" }}>Inventory Management</h3>
-            <table>
-              <thead>
-                <tr><th>Material Name</th><th>Quantity</th><th>Location</th><th>Last Updated</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Material 1</td>
-                  <td>100</td>
-                  <td>Warehouse A</td>
-                  <td>Today</td>
-                </tr>
-              </tbody>
-            </table>
-            <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
-              <button className="primary">Save Changes</button>
-              <button className="primary">Export Inventory</button>
-              <button className="primary">Order Materials</button>
-            </div>
-          </>
-        )}
-
-        {page === "vendors" && (
-          <>
-            <h3>Vendor Scorecard</h3>
-            <div className="scorecard">
-              <div className="rating-badge">5</div>
-              <span>Rating based on delivery performance</span>
-            </div>
-            <h3>Data Visualizations</h3>
-            <div className="chart-row">
-              <div className="chart-placeholder">Order Fulfillment Over Time</div>
-              <div className="chart-placeholder">Current Stock Composition</div>
-            </div>
-            <h3>Completed Orders</h3>
-            <table>
-              <thead>
-                <tr><th>Order ID</th><th>Rating</th><th>Comments</th></tr>
-              </thead>
-              <tbody>
-                {completedOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.rating}</td>
-                    <td>{order.comments}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-            <label>Filter by Time:</label><br />
-            <input type="text" placeholder="Enter date..." style={{ marginTop: "10px" }} />
-          </>
-        )}
-
-        {page === "vendor-control" && subPage === "bids" && (
-          <>
-            <h2>Vendor Bids</h2>
-            <table>
-              <thead>
-                <tr><th>Vendor</th><th>Material</th><th>Bid Price</th><th>Timeline</th><th>Rating</th><th>Blockchain Status</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Vendor A</td>
-                  <td>Titanium Alloy</td>
-                  <td>$120/unit</td>
-                  <td>3 weeks</td>
-                  <td>4.8 ⭐</td>
-                  <td>✅ Verified</td>
-                </tr>
-                <tr>
-                  <td>Vendor B</td>
-                  <td>Aluminum 7075</td>
-                  <td>$95/unit</td>
-                  <td>2 weeks</td>
-                  <td>4.5 ⭐</td>
-                  <td>⏳ Pending</td>
-                </tr>
-              </tbody>
-            </table>
-          </>
-        )}
-
-        {page === "vendor-control" && subPage === "followups" && (
-          <>
-            <h2>Vendor Follow-Ups</h2>
-            <p>Set follow-up reminders and track vendor updates:</p>
-            <table>
-              <thead>
-                <tr><th>Vendor</th><th>Material</th><th>Next Update</th><th>Status</th><th>Blockchain Contract</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Vendor A</td>
-                  <td>Titanium Alloy</td>
-                  <td>April 15, 2025</td>
-                  <td>Pending</td>
-                  <td><code>0x12...3f4d</code></td>
-                </tr>
-                <tr>
-                  <td>Vendor B</td>
-                  <td>Aluminum 7075</td>
-                  <td>April 18, 2025</td>
-                  <td>Scheduled</td>
-                  <td><code>0x78...9a2b</code></td>
-                </tr>
-              </tbody>
-            </table>
-          </>
-        )}
-
-        {page === "vendor-control" && subPage === "trusted" && (
-          <>
-            <h2>Trusted Vendor Sources</h2>
-            <p>Blockchain-verified trusted vendor list:</p>
-            <ul className="trusted-list">
-              <li>✅ Vendor A <span className="blockchain-verified">⛓️ Verified</span> <button className="secondary">Remove</button></li>
-              <li>✅ Vendor C <span className="blockchain-verified">⛓️ Verified</span> <button className="secondary">Remove</button></li>
-            </ul>
-            <input type="text" placeholder="Add new vendor..." style={{ marginTop: "10px" }} />
-            <button className="primary" style={{ marginTop: "10px" }}>Add to Trusted & Register on Blockchain</button>
-          </>
-        )}
-      </div>
-
-      {selectedPart && (
-        <div className="modal-overlay">
-          <div className="modal-content-wide">
-            {!showVendorForm ? (
-              <>
-                <h2>Material Specifications</h2>
-                <h3>{selectedPart.name}</h3>
-                <table>
-                  <tbody>
-                    {Object.entries(selectedPart.specs).map(([key, value]) => (
-                      <tr key={key}>
-                        <td><strong>{key}:</strong></td>
-                        <td>{value}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-                <div className="modal-actions">
-                  <button onClick={() => setSelectedPart(null)} className="secondary">
-                    Close
-                  </button>
-                  <button className="primary" onClick={() => setShowVendorForm(true)}>
-                    Apply as Vendor
-                  </button>
-                </div>
-              </>
-            ) : (
-              <>
-                <h2>Apply as Vendor for {selectedPart.name}</h2>
-                <div className="blockchain-note">
-                  <p>
-                    <strong>⛓️ Blockchain Integration:</strong> Your application will be securely recorded on the blockchain, 
-                    ensuring transparency and immutability.
-                  </p>
-                </div>
-                
-                <div className="vendor-form">
-                  <div className="form-group">
-                    <label>Company Name</label>
-                    <input 
-                      type="text" 
-                      name="companyName"
-                      value={vendorForm.companyName}
-                      onChange={handleVendorFormChange}
-                      placeholder="Your company name"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Contact Email</label>
-                    <input 
-                      type="email" 
-                      name="contactEmail"
-                      value={vendorForm.contactEmail}
-                      onChange={handleVendorFormChange}
-                      placeholder="business@example.com"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Phone Number</label>
-                    <input 
-                      type="tel" 
-                      name="phoneNumber"
-                      value={vendorForm.phoneNumber}
-                      onChange={handleVendorFormChange}
-                      placeholder="+1 234 567 8900"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Supplier Capacity (units/month)</label>
-                    <input 
-                      type="number" 
-                      name="supplierCapacity"
-                      value={vendorForm.supplierCapacity}
-                      onChange={handleVendorFormChange}
-                      placeholder="1000"
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Certifications</label>
-                    <input 
-                      type="text" 
-                      name="certification"
-                      value={vendorForm.certification}
-                      onChange={handleVendorFormChange}
-                      placeholder="ISO 9001, AS9100, etc."
-                    />
-                  </div>
-                  
-                  <div className="form-group">
-                    <label>Average Delivery Time (days)</label>
-                    <input 
-                      type="number" 
-                      name="deliveryTime"
-                      value={vendorForm.deliveryTime}
-                      onChange={handleVendorFormChange}
-                      placeholder="14"
-                    />
-                  </div>
-                </div>
-                
-                {txStatus && <div className="tx-status">{txStatus}</div>}
-                
-                <div className="blockchain-address">
-                  {account ? (
-                    <span>Connected Wallet: {account.substring(0, 6)}...{account.substring(account.length - 4)}</span>
-                  ) : (
-                    <span className="status-warning">No wallet connected. Please connect your Ethereum wallet.</span>
-                  )}
-                </div>
-                
-                <div className="modal-actions">
-                  <button onClick={() => setShowVendorForm(false)} className="secondary">
-                    Back
-                  </button>
-                  <button 
-                    className="primary" 
-                    onClick={handleVendorSubmit}
-                    disabled={!isBlockchainConnected}
-                  >
-                    {isBlockchainConnected ? "Submit to Blockchain" : "Connect Wallet First"}
-                  </button>
-                </div>
-              </>
-            )}
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-export default App;
+  // Enhanced Vendors Data - 15 entries
+  const vendors = [
+    { id: 1, name: "AeroTech Industries", rating: 4.8, location: "Seattle, WA", blockchain: true, activeContracts: 12, contactPerson: "John Smith", email: "jsmith@aerotech.com", phone: "206-555-1234", deliveryPerformance: 98, qualityScore: 95, avgLeadTime: 14, specialization: "Precision machined components", yearEstablished: 2006, certifications: ["AS9100D", "ISO 9001:2015", "NADCAP"] },
+    { id: 2, name: "TitaniumPro Supplies", rating: 4.5, location: "Phoenix, AZ", blockchain: true, activeContracts: 8, contactPerson: "Sarah Johnson", email: "sjohnson@titanium.com", phone: "480-555-9876", deliveryPerformance: 92, qualityScore: 97, avgLeadTime: 18, specialization: "Titanium alloy parts", yearEstablished: 2010, certifications: ["ISO 9001:2015", "AS9100C"] },
+    { id: 3, name: "Global Aero Components", rating: 4.2, location: "Dallas, TX", blockchain: true, activeContracts: 5, contactPerson: "David Williams", email: "dwilliams@globalaero.com", phone: "214-555-4321", deliveryPerformance: 89, qualityScore: 90, avgLeadTime: 21, specialization: "Composite structures", yearEstablished: 2009, certifications: ["ISO 9001:2015", "AS9100D", "ISO 14001"] },
+    { id: 4, name: "Precision Aerospace", rating: 4.7, location: "Boston, MA", blockchain: false, activeContracts: 3, contactPerson: "Michelle Brown", email: "mbrown@precision.com", phone: "617-555-7890", deliveryPerformance: 94, qualityScore: 93, avgLeadTime: 16, specialization: "Avionics and electronic systems", yearEstablished: 2012, certifications: ["AS9100D", "ISO 9001:2015", "CMMI Level 3"] },
+    { id: 5, name: "Advanced Materials Corp", rating: 4.3, location: "San Diego, CA", blockchain: true, activeContracts: 7, contactPerson: "Robert Chen", email: "rchen@advmaterials.com", phone: "858-555-3456", deliveryPerformance: 91, qualityScore: 88, avgLeadTime: 15, specialization: "Composite and advanced materials", yearEstablished: 2008, certifications: ["AS9100D", "NADCAP"] },
+    { id: 6, name: "Aerospace Dynamics", rating: 4.6, location: "Denver, CO", blockchain: true, activeContracts: 9, contactPerson: "Jennifer Adams", email: "jadams@aerodyn.com", phone: "303-555-6789", deliveryPerformance: 95, qualityScore: 92, avgLeadTime: 12, specialization: "Hydraulic systems", yearEstablished: 2005, certifications: ["ISO 9001:2015", "AS9100D"] },
+    { id: 7, name: "NextGen Aviation Systems", rating: 4.4, location: "Austin, TX", blockchain: false, activeContracts: 4, contactPerson: "Michael Wilson", email: "mwilson@nextgenav.com", phone: "512-555-2468", deliveryPerformance: 90, qualityScore: 94, avgLeadTime: 19, specialization: "Flight control systems", yearEstablished: 2013, certifications: ["AS9100D", "ISO 9001:2015"] },
+    { id: 8, name: "AirFrame Technologies", rating: 4.1, location: "Portland, OR", blockchain: true, activeContracts: 6, contactPerson: "Lisa Parker", email: "lparker@airframetech.com", phone: "503-555-1357", deliveryPerformance: 87, qualityScore: 89, avgLeadTime: 20, specialization: "Structural components", yearEstablished: 2011, certifications: ["ISO 9001:2015", "AS9100C"] },
+    { id: 9, name: "Sky-High Fabrication", rating: 4.9, location: "Wichita, KS", blockchain: true, activeContracts: 11, contactPerson: "Thomas Rodriguez", email: "trodriguez@skyhighfab.com", phone: "316-555-8642", deliveryPerformance: 97, qualityScore: 98, avgLeadTime: 13, specialization: "Fuselage and wing components", yearEstablished: 2003, certifications: ["AS9100D", "ISO 9001:2015", "NADCAP"] },
+    { id: 10, name: "Quantum Aerospace Solutions", rating: 4.0, location: "Atlanta, GA", blockchain: false, activeContracts: 2, contactPerson: "Karen Martinez", email: "kmartinez@quantumaero.com", phone: "404-555-7531", deliveryPerformance: 85, qualityScore: 87, avgLeadTime: 22, specialization: "Landing gear systems", yearEstablished: 2015, certifications: ["ISO 9001:2015", "AS9100C"] },
+    { id: 11, name: "Aerodynamic Precision Works", rating: 4.5, location: "Cincinnati, OH", blockchain: true, activeContracts: 7, contactPerson: "Daniel Thompson", email: "dthompson@aeroprecision.com", phone: "513-555-9753", deliveryPerformance: 93, qualityScore: 91, avgLeadTime: 17, specialization: "Engine components", yearEstablished: 2007, certifications: ["AS9100D", "ISO 9001:2015"] },
+    { id: 12, name: "Elite Aerospace Manufacturing", rating: 4.8, location: "Hartford, CT", blockchain: true, activeContracts: 10, contactPerson: "Rachel Kim", email: "rkim@eliteaero.com", phone: "860-555-3691", deliveryPerformance: 96, qualityScore: 96, avgLeadTime: 15, specialization: "Actuator systems", yearEstablished: 2004, certifications: ["ISO 9001:2015", "AS9100D", "NADCAP"] },
+    { id: 13, name: "Alliance Aviation Components", rating: 4.2, location: "Charleston, SC", blockchain: false, activeContracts: 4, contactPerson: "Christopher Davis", email: "cdavis@allianceaviation.com", phone: "843-555-8024", deliveryPerformance: 88, qualityScore: 90, avgLeadTime: 20, specialization: "Interior components", yearEstablished: 2010, certifications: ["AS9100C", "ISO 9001:2015"] },
+    { id: 14, name: "Sky Materials", rating: 4.6, location: "Minneapolis, MN", blockchain: true, activeContracts: 8, contactPerson: "Amanda White", email: "awhite@skymaterials.com", phone: "612-555-4682", deliveryPerformance: 94, qualityScore: 93, avgLeadTime: 16, specialization: "Composite materials", yearEstablished: 2008, certifications: ["ISO 9001:2015", "AS9100D"] },
+    { id: 15, name: "Aerospace Precision Products", rating: 4.3, location: "Huntsville, AL", blockchain: true, activeContracts: 6, contactPerson: "Brian Miller", email: "bmiller@aeroprecision.com", phone: "256-555-7319", deliveryPerformance: 91, qualityScore: 89,
