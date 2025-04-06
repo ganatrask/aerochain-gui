@@ -60,6 +60,12 @@ function App() {
   });
   const [isBlockchainConnected, setIsBlockchainConnected] = useState(false);
   const [txStatus, setTxStatus] = useState("");
+  
+  // New state from App(1).js
+  const [page, setPage] = useState("dashboard");
+  const [subPage, setSubPage] = useState(null);
+  const [vendorControlOpen, setVendorControlOpen] = useState(false);
+  const [showVendorForm, setShowVendorForm] = useState(false);
 
   const parts = [
     {
@@ -221,6 +227,16 @@ function App() {
     },    
   ];
   
+  // New data structures from App(1).js
+  const orders = [
+    { id: "#001", item: "Servo Bracket", qty: 100, status: "Shipped" },
+    { id: "#002", item: "Heat Sink", qty: 50, status: "Pending" },
+  ];
+
+  const completedOrders = [
+    { id: "#12345", rating: 5, comments: "Great service!" },
+  ];
+  
   // Initialize Web3 connection
   useEffect(() => {
     const initWeb3 = async () => {
@@ -302,8 +318,6 @@ function App() {
     }
   };
 
-  const [showVendorForm, setShowVendorForm] = useState(false);
-
   if (!isLoggedIn) {
     return (
       <div className="auth-container">
@@ -370,11 +384,21 @@ function App() {
   return (
     <div className="dashboard-container">
       <div className="sidebar">
-        <h2>Dashboard</h2>
+        <h2>{page === "vendors" ? "Performance Dashboard" : "Dashboard"}</h2>
         <ul>
-          <li>👥 Buyers</li>
-          <li>📦 Orders</li>
-          <li>🏭 Vendors</li>
+          <li onClick={() => setPage("dashboard")}>👥 Buyers</li>
+          <li onClick={() => setPage("orders")}>📦 Orders</li>
+          <li onClick={() => setPage("vendors")}>🏭 Vendors</li>
+          <li onClick={() => setVendorControlOpen(!vendorControlOpen)}>
+            🛠 Vendor Control {vendorControlOpen ? "▾" : "▸"}
+          </li>
+          {vendorControlOpen && (
+            <ul className="sub-menu">
+              <li onClick={() => { setPage("vendor-control"); setSubPage("bids"); }}>📩 Bids</li>
+              <li onClick={() => { setPage("vendor-control"); setSubPage("followups"); }}>⏰ Follow Ups</li>
+              <li onClick={() => { setPage("vendor-control"); setSubPage("trusted"); }}>⭐ Trusted Sources</li>
+            </ul>
+          )}
           <li>⛓️ Blockchain Status: {isBlockchainConnected ? 
               <span className="status-connected">Connected</span> : 
               <span className="status-disconnected">Disconnected</span>}
@@ -384,30 +408,162 @@ function App() {
       </div>
 
       <div className="main-content">
-        <div className="header-banner">
-          <h2>Aerospace Part Catalog</h2>
-          <div className="blockchain-indicator">
-            {isBlockchainConnected ? 
-              <span className="blockchain-connected">⛓️ Blockchain Connected</span> : 
-              <span className="blockchain-disconnected">⛓️ Connect Wallet</span>}
-          </div>
-        </div>
-        
-        {parts.map((part) => (
-          <div className="buyer-card" key={part.id}>
-            <h3>{part.name}</h3>
-            <p>
-              <strong>Material:</strong> {part.material}
-            </p>
-            <p>
-              <strong>Last Updated:</strong> {part.lastUpdated}
-            </p>
-            <p>
-              <strong>Status:</strong> {part.status}
-            </p>
-            <button onClick={() => setSelectedPart(part)}>More Info</button>
-          </div>
-        ))}
+        {page === "dashboard" && (
+          <>
+            <div className="header-banner">
+              <h2>Aerospace Part Catalog</h2>
+              <div className="blockchain-indicator">
+                {isBlockchainConnected ? 
+                  <span className="blockchain-connected">⛓️ Blockchain Connected</span> : 
+                  <span className="blockchain-disconnected">⛓️ Connect Wallet</span>}
+              </div>
+            </div>
+            
+            {parts.map((part) => (
+              <div className="buyer-card" key={part.id}>
+                <h3>{part.name}</h3>
+                <p>
+                  <strong>Material:</strong> {part.material}
+                </p>
+                <p>
+                  <strong>Last Updated:</strong> {part.lastUpdated}
+                </p>
+                <p>
+                  <strong>Status:</strong> {part.status}
+                </p>
+                <button onClick={() => setSelectedPart(part)}>More Info</button>
+              </div>
+            ))}
+          </>
+        )}
+
+        {page === "orders" && (
+          <>
+            <h2>Upload Inventory</h2>
+            <div className="upload-box">Drag and drop or click to upload XLS/CSV files</div>
+            <h3 style={{ marginTop: "30px" }}>Inventory Management</h3>
+            <table>
+              <thead>
+                <tr><th>Material Name</th><th>Quantity</th><th>Location</th><th>Last Updated</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Material 1</td>
+                  <td>100</td>
+                  <td>Warehouse A</td>
+                  <td>Today</td>
+                </tr>
+              </tbody>
+            </table>
+            <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
+              <button className="primary">Save Changes</button>
+              <button className="primary">Export Inventory</button>
+              <button className="primary">Order Materials</button>
+            </div>
+          </>
+        )}
+
+        {page === "vendors" && (
+          <>
+            <h3>Vendor Scorecard</h3>
+            <div className="scorecard">
+              <div className="rating-badge">5</div>
+              <span>Rating based on delivery performance</span>
+            </div>
+            <h3>Data Visualizations</h3>
+            <div className="chart-row">
+              <div className="chart-placeholder">Order Fulfillment Over Time</div>
+              <div className="chart-placeholder">Current Stock Composition</div>
+            </div>
+            <h3>Completed Orders</h3>
+            <table>
+              <thead>
+                <tr><th>Order ID</th><th>Rating</th><th>Comments</th></tr>
+              </thead>
+              <tbody>
+                {completedOrders.map((order) => (
+                  <tr key={order.id}>
+                    <td>{order.id}</td>
+                    <td>{order.rating}</td>
+                    <td>{order.comments}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+            <label>Filter by Time:</label><br />
+            <input type="text" placeholder="Enter date..." style={{ marginTop: "10px" }} />
+          </>
+        )}
+
+        {page === "vendor-control" && subPage === "bids" && (
+          <>
+            <h2>Vendor Bids</h2>
+            <table>
+              <thead>
+                <tr><th>Vendor</th><th>Material</th><th>Bid Price</th><th>Timeline</th><th>Rating</th><th>Blockchain Status</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Vendor A</td>
+                  <td>Titanium Alloy</td>
+                  <td>$120/unit</td>
+                  <td>3 weeks</td>
+                  <td>4.8 ⭐</td>
+                  <td>✅ Verified</td>
+                </tr>
+                <tr>
+                  <td>Vendor B</td>
+                  <td>Aluminum 7075</td>
+                  <td>$95/unit</td>
+                  <td>2 weeks</td>
+                  <td>4.5 ⭐</td>
+                  <td>⏳ Pending</td>
+                </tr>
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {page === "vendor-control" && subPage === "followups" && (
+          <>
+            <h2>Vendor Follow-Ups</h2>
+            <p>Set follow-up reminders and track vendor updates:</p>
+            <table>
+              <thead>
+                <tr><th>Vendor</th><th>Material</th><th>Next Update</th><th>Status</th><th>Blockchain Contract</th></tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Vendor A</td>
+                  <td>Titanium Alloy</td>
+                  <td>April 15, 2025</td>
+                  <td>Pending</td>
+                  <td><code>0x12...3f4d</code></td>
+                </tr>
+                <tr>
+                  <td>Vendor B</td>
+                  <td>Aluminum 7075</td>
+                  <td>April 18, 2025</td>
+                  <td>Scheduled</td>
+                  <td><code>0x78...9a2b</code></td>
+                </tr>
+              </tbody>
+            </table>
+          </>
+        )}
+
+        {page === "vendor-control" && subPage === "trusted" && (
+          <>
+            <h2>Trusted Vendor Sources</h2>
+            <p>Blockchain-verified trusted vendor list:</p>
+            <ul className="trusted-list">
+              <li>✅ Vendor A <span className="blockchain-verified">⛓️ Verified</span> <button className="secondary">Remove</button></li>
+              <li>✅ Vendor C <span className="blockchain-verified">⛓️ Verified</span> <button className="secondary">Remove</button></li>
+            </ul>
+            <input type="text" placeholder="Add new vendor..." style={{ marginTop: "10px" }} />
+            <button className="primary" style={{ marginTop: "10px" }}>Add to Trusted & Register on Blockchain</button>
+          </>
+        )}
       </div>
 
       {selectedPart && (
