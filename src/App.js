@@ -2517,18 +2517,603 @@ function App() {
   </>
 )}
 
-        {page === "vendor-control" && subPage === "trusted" && (
-          <>
-            <h2>Trusted Vendor Sources</h2>
-            <p>Blockchain-verified trusted vendor list:</p>
-            <ul className="trusted-list">
-              <li>✅ Vendor A <span className="blockchain-verified">⛓️ Verified</span> <button className="secondary">Remove</button></li>
-              <li>✅ Vendor C <span className="blockchain-verified">⛓️ Verified</span> <button className="secondary">Remove</button></li>
-            </ul>
-            <input type="text" placeholder="Add new vendor..." style={{ marginTop: "10px" }} />
-            <button className="primary" style={{ marginTop: "10px" }}>Add to Trusted & Register on Blockchain</button>
-          </>
-        )}
+{page === "vendor-control" && subPage === "trusted" && (
+  <>
+    <div className="header-banner">
+      <h2>Trusted Vendor Sources</h2>
+      <div className="blockchain-indicator">
+        {isBlockchainConnected ? 
+          <span className="blockchain-connected">⛓️ Blockchain Verification Active</span> : 
+          <span className="blockchain-disconnected">⛓️ Connect Wallet for Verification</span>}
+      </div>
+    </div>
+
+    {/* Summary Stats */}
+    <div className="kpi-row">
+      <div className="kpi-card">
+        <h3>Verified Sources</h3>
+        <div className="kpi-value">24</div>
+        <div className="kpi-subtitle">100% blockchain certified</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Avg. Trust Score</h3>
+        <div className="kpi-value">92.7</div>
+        <div className="kpi-subtitle">+2.3 from Q1</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Active Trusted Contracts</h3>
+        <div className="kpi-value">18</div>
+        <div className="kpi-subtitle">Total value: $8.2M</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Pending Verification</h3>
+        <div className="kpi-value">5</div>
+        <div className="kpi-subtitle">Est. completion: 7 days</div>
+      </div>
+    </div>
+
+    {/* Trust Score Chart */}
+    <div className="section-header" style={{ marginTop: "20px" }}>
+      <h3>Trust Score Analytics</h3>
+    </div>
+    <div className="trust-analytics" style={{ backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)", marginBottom: "30px" }}>
+      <div className="charts-grid" style={{ display: "grid", gridTemplateColumns: "3fr 2fr", gap: "20px" }}>
+        <div className="chart-container">
+          <h4 style={{ margin: "0 0 15px 0" }}>Trust Score Progression (Last 6 Months)</h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <LineChart data={[
+              { month: 'Nov', score: 89.5, industry: 85.0 },
+              { month: 'Dec', score: 90.1, industry: 85.5 },
+              { month: 'Jan', score: 90.8, industry: 86.2 },
+              { month: 'Feb', score: 91.4, industry: 86.8 },
+              { month: 'Mar', score: 92.1, industry: 87.3 },
+              { month: 'Apr', score: 92.7, industry: 87.9 }
+            ]} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="month" />
+              <YAxis domain={[80, 100]} label={{ value: 'Score', angle: -90, position: 'insideLeft' }} />
+              <Tooltip />
+              <Legend />
+              <Line type="monotone" dataKey="score" stroke="#e53935" name="Your Trusted Vendors" strokeWidth={2} />
+              <Line type="monotone" dataKey="industry" stroke="#9e9e9e" name="Industry Average" strokeDasharray="5 5" />
+            </LineChart>
+          </ResponsiveContainer>
+        </div>
+        <div className="chart-container">
+          <h4 style={{ margin: "0 0 15px 0" }}>Trust Score Components</h4>
+          <ResponsiveContainer width="100%" height={250}>
+            <BarChart layout="vertical" data={[
+              { name: 'Quality', score: 94.5 },
+              { name: 'Delivery', score: 93.2 },
+              { name: 'Blockchain Compliance', score: 97.8 },
+              { name: 'Documentation', score: 89.5 },
+              { name: 'Cost Transparency', score: 88.6 }
+            ]} margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis type="number" domain={[80, 100]} />
+              <YAxis dataKey="name" type="category" />
+              <Tooltip formatter={(value) => [`${value}`, 'Score']} />
+              <Bar dataKey="score" fill="#e53935" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+    </div>
+
+    {/* Controls and Search */}
+    <div className="filter-controls" style={{ display: "flex", justifyContent: "space-between", marginBottom: "20px" }}>
+      <div className="search-box" style={{ flex: "1", marginRight: "15px" }}>
+        <input 
+          type="text" 
+          placeholder="Search trusted vendors..." 
+          style={{ 
+            width: "100%", 
+            padding: "10px 15px", 
+            borderRadius: "5px", 
+            border: "1px solid #ddd",
+            fontSize: "14px"
+          }} 
+        />
+      </div>
+      <div className="right-controls" style={{ display: "flex", gap: "10px" }}>
+        <select className="filter-dropdown" style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}>
+          <option>All Categories</option>
+          <option>Manufacturing</option>
+          <option>Raw Materials</option>
+          <option>Component Suppliers</option>
+          <option>Services</option>
+        </select>
+        <select className="filter-dropdown" style={{ padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}>
+          <option>All Locations</option>
+          <option>Domestic</option>
+          <option>International</option>
+          <option>West Coast</option>
+          <option>East Coast</option>
+        </select>
+        <button className="primary">
+          <span>Add New Trusted Vendor</span>
+        </button>
+      </div>
+    </div>
+
+    {/* Trusted Vendors Table */}
+    <div className="section-header">
+      <h3>Verified Trusted Vendors</h3>
+    </div>
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Vendor Name</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Trust Score</th>
+            <th>Certification</th>
+            <th>Blockchain Verification</th>
+            <th>Last Audit</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#4caf50", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>AeroTech Industries</span>
+              </div>
+            </td>
+            <td>Manufacturing</td>
+            <td>Seattle, WA, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "98%", height: "100%", backgroundColor: "#4caf50" }}></div>
+                </div>
+                <span>98</span>
+              </div>
+            </td>
+            <td>ISO 9001, AS9100</td>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
+                  <span className="blockchain-icon">⛓️</span> Verified
+                </span>
+                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
+                  0x7Fe3...4d2A
+                </span>
+              </div>
+            </td>
+            <td>March 15, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Details</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#4caf50", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>TitaniumPro Supplies</span>
+              </div>
+            </td>
+            <td>Raw Materials</td>
+            <td>Phoenix, AZ, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "95%", height: "100%", backgroundColor: "#4caf50" }}></div>
+                </div>
+                <span>95</span>
+              </div>
+            </td>
+            <td>ISO 9001, ISO 14001</td>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
+                  <span className="blockchain-icon">⛓️</span> Verified
+                </span>
+                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
+                  0x9Ab2...7c3F
+                </span>
+              </div>
+            </td>
+            <td>February 28, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Details</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#4caf50", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>Global Aero Components</span>
+              </div>
+            </td>
+            <td>Component Suppliers</td>
+            <td>Dallas, TX, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "92%", height: "100%", backgroundColor: "#4caf50" }}></div>
+                </div>
+                <span>92</span>
+              </div>
+            </td>
+            <td>AS9100, NADCAP</td>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
+                  <span className="blockchain-icon">⛓️</span> Verified
+                </span>
+                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
+                  0x3Df5...9e2B
+                </span>
+              </div>
+            </td>
+            <td>March 05, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Details</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#ff9800", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>SkyHigh Materials</span>
+              </div>
+            </td>
+            <td>Raw Materials</td>
+            <td>Denver, CO, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "88%", height: "100%", backgroundColor: "#ff9800" }}></div>
+                </div>
+                <span>88</span>
+              </div>
+            </td>
+            <td>ISO 9001</td>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
+                  <span className="blockchain-icon">⛓️</span> Verified
+                </span>
+                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
+                  0x5Gh7...2j4K
+                </span>
+              </div>
+            </td>
+            <td>January 20, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Details</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#4caf50", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>AeroMaxx Solutions</span>
+              </div>
+            </td>
+            <td>Component Suppliers</td>
+            <td>Austin, TX, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "94%", height: "100%", backgroundColor: "#4caf50" }}></div>
+                </div>
+                <span>94</span>
+              </div>
+            </td>
+            <td>AS9100, ISO 9001</td>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <span className="blockchain-verified" style={{ fontSize: "12px" }}>
+                  <span className="blockchain-icon">⛓️</span> Verified
+                </span>
+                <span style={{ marginLeft: "5px", fontFamily: "monospace", fontSize: "12px", color: "#666" }}>
+                  0x2Bf8...5a3C
+                </span>
+              </div>
+            </td>
+            <td>March 22, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Details</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {/* Pending Verification Section */}
+    <div className="section-header" style={{ marginTop: "30px" }}>
+      <h3>Pending Verification</h3>
+    </div>
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Vendor Name</th>
+            <th>Category</th>
+            <th>Location</th>
+            <th>Initial Score</th>
+            <th>Documentation</th>
+            <th>Verification Status</th>
+            <th>Submitted Date</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#ff9800", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>Precision Aerospace</span>
+              </div>
+            </td>
+            <td>Manufacturing</td>
+            <td>Boston, MA, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "90%", height: "100%", backgroundColor: "#ff9800" }}></div>
+                </div>
+                <span>90</span>
+              </div>
+            </td>
+            <td>
+              <span className="doc-status complete">Complete</span>
+            </td>
+            <td>
+              <div className="progress-container">
+                <div className="progress-bar" style={{ 
+                  width: "150px", 
+                  height: "6px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "3px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "80%", height: "100%", backgroundColor: "#e53935" }}></div>
+                </div>
+                <span style={{ fontSize: "12px" }}>80% - Wallet Setup</span>
+              </div>
+            </td>
+            <td>April 2, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Review</button>
+                <button className="primary small">Verify</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#ff9800", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>JetStream Engineering</span>
+              </div>
+            </td>
+            <td>Component Suppliers</td>
+            <td>Portland, OR, USA</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "87%", height: "100%", backgroundColor: "#ff9800" }}></div>
+                </div>
+                <span>87</span>
+              </div>
+            </td>
+            <td>
+              <span className="doc-status partial">Partial</span>
+            </td>
+            <td>
+              <div className="progress-container">
+                <div className="progress-bar" style={{ 
+                  width: "150px", 
+                  height: "6px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "3px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "40%", height: "100%", backgroundColor: "#e53935" }}></div>
+                </div>
+                <span style={{ fontSize: "12px" }}>40% - Document Verification</span>
+              </div>
+            </td>
+            <td>March 28, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Review</button>
+                <button className="primary small">Request Docs</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ width: "8px", height: "8px", backgroundColor: "#f44336", borderRadius: "50%", marginRight: "10px" }}></div>
+                <span>AvionicsTech International</span>
+              </div>
+            </td>
+            <td>Services</td>
+            <td>Montreal, Canada</td>
+            <td>
+              <div className="score-bar" style={{ display: "flex", alignItems: "center" }}>
+                <div style={{ 
+                  width: "100px", 
+                  height: "10px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "5px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "82%", height: "100%", backgroundColor: "#f44336" }}></div>
+                </div>
+                <span>82</span>
+              </div>
+            </td>
+            <td>
+              <span className="doc-status incomplete">Incomplete</span>
+            </td>
+            <td>
+              <div className="progress-container">
+                <div className="progress-bar" style={{ 
+                  width: "150px", 
+                  height: "6px", 
+                  backgroundColor: "#e0e0e0", 
+                  borderRadius: "3px", 
+                  overflow: "hidden",
+                  marginRight: "10px"
+                }}>
+                  <div style={{ width: "20%", height: "100%", backgroundColor: "#e53935" }}></div>
+                </div>
+                <span style={{ fontSize: "12px" }}>20% - Initial Review</span>
+              </div>
+            </td>
+            <td>April 4, 2025</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">Review</button>
+                <button className="primary small">Request Docs</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {/* Onboarding Process Section */}
+    <div className="section-header" style={{ marginTop: "30px" }}>
+      <h3>Blockchain Verification Process</h3>
+    </div>
+    <div className="process-container" style={{ display: "flex", backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)", marginBottom: "30px" }}>
+      <div className="process-step" style={{ flex: "1", position: "relative", textAlign: "center", padding: "0 15px" }}>
+        <div className="step-number" style={{ width: "40px", height: "40px", backgroundColor: "#e53935", color: "white", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto 15px auto", fontWeight: "bold" }}>1</div>
+        <div className="step-line" style={{ position: "absolute", top: "20px", right: "-50%", width: "100%", height: "2px", backgroundColor: "#e0e0e0", zIndex: "0" }}></div>
+        <h4 style={{ margin: "0 0 10px 0" }}>Documentation</h4>
+        <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>Collect and verify all required company documentation and certifications</p>
+      </div>
+      <div className="process-step" style={{ flex: "1", position: "relative", textAlign: "center", padding: "0 15px" }}>
+        <div className="step-number" style={{ width: "40px", height: "40px", backgroundColor: "#e53935", color: "white", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto 15px auto", fontWeight: "bold" }}>2</div>
+        <div className="step-line" style={{ position: "absolute", top: "20px", right: "-50%", width: "100%", height: "2px", backgroundColor: "#e0e0e0", zIndex: "0" }}></div>
+        <h4 style={{ margin: "0 0 10px 0" }}>Wallet Setup</h4>
+        <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>Create and secure blockchain wallet for vendor verification and transactions</p>
+      </div>
+      <div className="process-step" style={{ flex: "1", position: "relative", textAlign: "center", padding: "0 15px" }}>
+        <div className="step-number" style={{ width: "40px", height: "40px", backgroundColor: "#e53935", color: "white", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto 15px auto", fontWeight: "bold" }}>3</div>
+        <div className="step-line" style={{ position: "absolute", top: "20px", right: "-50%", width: "100%", height: "2px", backgroundColor: "#e0e0e0", zIndex: "0" }}></div>
+        <h4 style={{ margin: "0 0 10px 0" }}>Smart Contract</h4>
+        <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>Deploy smart contract with terms, conditions, and verification metrics</p>
+      </div>
+      <div className="process-step" style={{ flex: "1", position: "relative", textAlign: "center", padding: "0 15px" }}>
+        <div className="step-number" style={{ width: "40px", height: "40px", backgroundColor: "#e53935", color: "white", borderRadius: "50%", display: "flex", justifyContent: "center", alignItems: "center", margin: "0 auto 15px auto", fontWeight: "bold" }}>4</div>
+        <h4 style={{ margin: "0 0 10px 0" }}>Verification</h4>
+        <p style={{ fontSize: "14px", color: "#666", margin: "0" }}>Final verification audit and activation of trusted vendor status</p>
+      </div>
+    </div>
+
+    {/* Add New Trusted Vendor Form (toggle show/hide) */}
+    <div className="section-header" style={{ marginTop: "30px" }}>
+      <h3>Add New Trusted Vendor</h3>
+    </div>
+    <div className="add-vendor-form" style={{ backgroundColor: "white", padding: "25px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)", marginBottom: "30px" }}>
+      <div className="blockchain-note" style={{ backgroundColor: "#fff0f0", borderLeft: "4px solid #e53935", padding: "15px", marginBottom: "20px" }}>
+        <p style={{ margin: "0", fontWeight: "bold" }}>⛓️ Blockchain Verification Required</p>
+        <p style={{ margin: "10px 0 0 0", fontSize: "14px" }}>All trusted vendors must complete blockchain verification. The vendor will need to provide documentation and create a blockchain wallet for verification.</p>
+      </div>
+      
+      <div className="form-grid" style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: "20px" }}>
+        <div className="form-group">
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Vendor Name *</label>
+          <input type="text" placeholder="Enter company name" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }} />
+        </div>
+        <div className="form-group">
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Category *</label>
+          <select style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }}>
+            <option>Select a category</option>
+            <option>Manufacturing</option>
+            <option>Raw Materials</option>
+            <option>Component Suppliers</option>
+            <option>Services</option>
+          </select>
+        </div>
+        <div className="form-group">
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Contact Email *</label>
+          <input type="email" placeholder="Enter contact email" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }} />
+        </div>
+        <div className="form-group">
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Phone Number *</label>
+          <input type="tel" placeholder="Enter phone number" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }} />
+        </div>
+        <div className="form-group">
+          <label style={{ display: "block", marginBottom: "8px", fontWeight: "bold" }}>Location *</label>
+          <input type="text" placeholder="City, State, Country" style={{ width: "100%", padding: "10px", borderRadius: "5px", border: "1px solid #ddd" }} />
+        </div>
       </div>
 
       {selectedPart && (
