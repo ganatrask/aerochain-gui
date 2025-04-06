@@ -1082,37 +1082,509 @@ function App() {
   </>
 )}
 
-        {page === "vendors" && (
-          <>
-            <h3>Vendor Scorecard</h3>
-            <div className="scorecard">
-              <div className="rating-badge">5</div>
-              <span>Rating based on delivery performance</span>
+{page === "vendors" && (
+  <>
+    <div className="header-banner">
+      <h2>Vendor Management & Performance</h2>
+      <div className="blockchain-indicator">
+        {isBlockchainConnected ? 
+          <span className="blockchain-connected">⛓️ Blockchain Verification Active</span> : 
+          <span className="blockchain-disconnected">⛓️ Connect Wallet for Verification</span>}
+      </div>
+    </div>
+
+    {/* Vendor Performance Overview */}
+    <div className="section-header">
+      <h3>Vendor Performance Overview</h3>
+    </div>
+    
+    <div className="kpi-row">
+      <div className="kpi-card">
+        <h3>Total Vendors</h3>
+        <div className="kpi-value">32</div>
+        <div className="kpi-subtitle">24 Blockchain Verified</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Avg. On-time Delivery</h3>
+        <div className="kpi-value">92.3%</div>
+        <div className="kpi-subtitle">+2.1% from last quarter</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Avg. Quality Score</h3>
+        <div className="kpi-value">4.7/5</div>
+        <div className="kpi-subtitle">Based on 128 reviews</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Active Contracts</h3>
+        <div className="kpi-value">37</div>
+        <div className="kpi-subtitle">Total value: $12.8M</div>
+      </div>
+    </div>
+
+    {/* Performance Charts */}
+    <div className="charts-grid" style={{ marginTop: "20px" }}>
+      <div className="chart-container large">
+        <h3>Vendor Performance Metrics (Last 6 Months)</h3>
+        <ResponsiveContainer width="100%" height={250}>
+          <LineChart data={vendorPerformanceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="month" />
+            <YAxis />
+            <Tooltip />
+            <Legend />
+            <Line type="monotone" dataKey="onTime" stroke="#8884d8" name="On-time Delivery %" />
+            <Line type="monotone" dataKey="quality" stroke="#82ca9d" name="Quality Score" />
+            <Line type="monotone" dataKey="blockchain" stroke="#ffc658" name="Blockchain Verified %" />
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div className="chart-container">
+        <h3>Lead Time Comparison</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <BarChart data={leadTimeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis dataKey="vendor" />
+            <YAxis label={{ value: 'Days', angle: -90, position: 'insideLeft' }} />
+            <Tooltip />
+            <Legend />
+            <Bar dataKey="quoted" fill="#8884d8" name="Quoted Lead Time" />
+            <Bar dataKey="actual" fill="#82ca9d" name="Actual Lead Time" />
+          </BarChart>
+        </ResponsiveContainer>
+      </div>
+      
+      <div className="chart-container">
+        <h3>Supplier Location Distribution</h3>
+        <ResponsiveContainer width="100%" height={200}>
+          <PieChart>
+            <Pie
+              data={supplierDistributionData}
+              cx="50%"
+              cy="50%"
+              labelLine={true}
+              outerRadius={80}
+              fill="#8884d8"
+              dataKey="value"
+              nameKey="name"
+              label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+            >
+              {supplierDistributionData.map((entry, index) => (
+                <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'][index % 5]} />
+              ))}
+            </Pie>
+            <Tooltip formatter={(value) => `${value}%`} />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    </div>
+
+    {/* Vendor Search and Filter */}
+    <div className="section-header">
+      <h3>Vendor Directory</h3>
+    </div>
+    
+    <div className="vendor-controls" style={{ marginBottom: "20px", display: "flex", gap: "15px", alignItems: "center" }}>
+      <input type="text" placeholder="Search vendors..." style={{ flex: "1" }} />
+      <select className="filter-dropdown" style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}>
+        <option>All Regions</option>
+        <option>West Coast</option>
+        <option>Midwest</option>
+        <option>East Coast</option>
+        <option>South</option>
+        <option>International</option>
+      </select>
+      <select className="filter-dropdown" style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}>
+        <option>All Certifications</option>
+        <option>ISO 9001</option>
+        <option>AS9100</option>
+        <option>ISO 14001</option>
+        <option>NADCAP</option>
+      </select>
+      <select className="filter-dropdown" style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}>
+        <option>All Blockchain Status</option>
+        <option>Verified</option>
+        <option>Pending</option>
+        <option>Not Verified</option>
+      </select>
+      <button className="primary">Filter</button>
+    </div>
+
+    {/* Vendor Listing Table */}
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Vendor Name</th>
+            <th>Location</th>
+            <th>Performance Rating</th>
+            <th>Active Contracts</th>
+            <th>Specialization</th>
+            <th>Lead Time (Avg)</th>
+            <th>Blockchain Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); setSelectedVendor(vendors[0]); }}>AeroTech Industries</a></td>
+            <td>Seattle, WA</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★★</div>
+                <span>4.8</span>
+              </div>
+            </td>
+            <td>12</td>
+            <td>Precision Metal Components, Turbine Components</td>
+            <td>14 days</td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); setSelectedVendor(vendors[1]); }}>TitaniumPro Supplies</a></td>
+            <td>Phoenix, AZ</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★★</div>
+                <span>4.5</span>
+              </div>
+            </td>
+            <td>8</td>
+            <td>Titanium Alloys, Heat-Resistant Materials</td>
+            <td>18 days</td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); setSelectedVendor(vendors[2]); }}>Global Aero Components</a></td>
+            <td>Dallas, TX</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★☆</div>
+                <span>4.2</span>
+              </div>
+            </td>
+            <td>5</td>
+            <td>Landing Gear Systems, Structural Components</td>
+            <td>21 days</td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); setSelectedVendor(vendors[3]); }}>Precision Aerospace</a></td>
+            <td>Boston, MA</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★★</div>
+                <span>4.7</span>
+              </div>
+            </td>
+            <td>3</td>
+            <td>Avionics Components, Electronic Systems</td>
+            <td>16 days</td>
+            <td><span className="blockchain-pending">⏳ Pending</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); }}>SkyHigh Materials</a></td>
+            <td>Denver, CO</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★☆</div>
+                <span>4.1</span>
+              </div>
+            </td>
+            <td>2</td>
+            <td>Composite Materials, Carbon Fiber Structures</td>
+            <td>25 days</td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); }}>JetStream Engineering</a></td>
+            <td>Portland, OR</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★☆</div>
+                <span>4.3</span>
+              </div>
+            </td>
+            <td>4</td>
+            <td>Engine Components, Hydraulic Systems</td>
+            <td>19 days</td>
+            <td><span className="blockchain-not-verified">✗ Not Verified</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => { e.preventDefault(); }}>AeroMaxx Solutions</a></td>
+            <td>Austin, TX</td>
+            <td>
+              <div className="rating-display">
+                <div className="stars">★★★★☆</div>
+                <span>4.4</span>
+              </div>
+            </td>
+            <td>3</td>
+            <td>Lightweight Alloys, Fastening Systems</td>
+            <td>15 days</td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Profile</button>
+                <button className="primary small">Place Order</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {/* Recent Performance Reviews */}
+    <div className="section-header">
+      <h3>Recent Vendor Performance Reviews</h3>
+    </div>
+    
+    <div className="reviews-container" style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: "20px", marginBottom: "30px" }}>
+      <div className="review-card" style={{ backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)" }}>
+        <div className="review-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+          <span style={{ fontWeight: "bold" }}>AeroTech Industries</span>
+          <div className="rating-display">
+            <div className="stars" style={{ color: "#ffc107" }}>★★★★★</div>
+          </div>
+        </div>
+        <p>"Exceptional quality and consistently on time with deliveries. Their turbofan blades exceeded our specifications."</p>
+        <div className="review-footer" style={{ display: "flex", justifyContent: "space-between", marginTop: "10px", fontSize: "12px", color: "#666" }}>
+          <span>Order #ORD-2025-0987</span>
+          <span>April 2, 2025</span>
+        </div>
+      </div>
+      
+      <div className="review-card" style={{ backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)" }}>
+        <div className="review-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+          <span style={{ fontWeight: "bold" }}>TitaniumPro Supplies</span>
+          <div className="rating-display">
+            <div className="stars" style={{ color: "#ffc107" }}>★★★★☆</div>
+          </div>
+        </div>
+        <p>"Great materials and good communication throughout the order process. Delivery was a few days late but they kept us informed."</p>
+        <div className="review-footer" style={{ display: "flex", justifyContent: "space-between", marginTop: "10px", fontSize: "12px", color: "#666" }}>
+          <span>Order #ORD-2025-0953</span>
+          <span>March 28, 2025</span>
+        </div>
+      </div>
+      
+      <div className="review-card" style={{ backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)" }}>
+        <div className="review-header" style={{ display: "flex", justifyContent: "space-between", marginBottom: "10px" }}>
+          <span style={{ fontWeight: "bold" }}>Precision Aerospace</span>
+          <div className="rating-display">
+            <div className="stars" style={{ color: "#ffc107" }}>★★★★★</div>
+          </div>
+        </div>
+        <p>"The heat sinks we ordered were perfectly machined and arrived ahead of schedule. Documentation was thorough and blockchain verified."</p>
+        <div className="review-footer" style={{ display: "flex", justifyContent: "space-between", marginTop: "10px", fontSize: "12px", color: "#666" }}>
+          <span>Order #ORD-2025-0921</span>
+          <span>March 25, 2025</span>
+        </div>
+      </div>
+    </div>
+
+    {/* Actions Row */}
+    <div style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+      <button className="secondary">Export Vendor Performance Data</button>
+      <div>
+        <button className="secondary" style={{ marginRight: "10px" }}>Vendor Onboarding</button>
+        <button className="primary">Add New Vendor</button>
+      </div>
+    </div>
+
+    {/* CSS for new components */}
+    <style jsx>{`
+      .rating-display {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .stars {
+        color: #ffc107;
+        letter-spacing: -2px;
+      }
+      .blockchain-verified {
+        background-color: #e8f5e9;
+        color: #4caf50;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+      }
+      .blockchain-pending {
+        background-color: #fff3e0;
+        color: #ff9800;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+      }
+      .blockchain-not-verified {
+        background-color: #ffebee;
+        color: #f44336;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+      }
+      button.small {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+      .filter-dropdown {
+        min-width: 150px;
+      }
+    `}</style>
+    
+    {/* Vendor Modal */}
+    {selectedVendor && (
+      <div className="modal-overlay">
+        <div className="modal-content-wide">
+          <div className="vendor-profile">
+            <div className="vendor-header">
+              <h2>{selectedVendor.name}</h2>
+              {selectedVendor.blockchain ? 
+                <div className="blockchain-badge">⛓️ Blockchain Verified</div> : 
+                <div className="blockchain-badge" style={{ backgroundColor: "#fff3e0", color: "#ff9800" }}>⛓️ Verification Pending</div>}
             </div>
-            <h3>Data Visualizations</h3>
-            <div className="chart-row">
-              <div className="chart-placeholder">Order Fulfillment Over Time</div>
-              <div className="chart-placeholder">Current Stock Composition</div>
+            
+            <div className="vendor-rating">
+              <div className="rating-stars">{"★".repeat(Math.floor(selectedVendor.rating))}{"☆".repeat(5 - Math.floor(selectedVendor.rating))}</div>
+              <div className="rating-value">{selectedVendor.rating}/5.0</div>
             </div>
-            <h3>Completed Orders</h3>
-            <table>
+            
+            <div className="vendor-details">
+              <div className="detail-group">
+                <h3>Company Information</h3>
+                <p><strong>Location:</strong> {selectedVendor.location}</p>
+                <p><strong>Active Contracts:</strong> {selectedVendor.activeContracts}</p>
+                <p><strong>Contact Person:</strong> {selectedVendor.contactPerson}</p>
+                <p><strong>Email:</strong> {selectedVendor.email}</p>
+                <p><strong>Phone:</strong> {selectedVendor.phone}</p>
+              </div>
+              
+              <div className="detail-group">
+                <h3>Performance Metrics</h3>
+                <p><strong>Delivery Performance:</strong> {selectedVendor.deliveryPerformance}%</p>
+                <p><strong>Quality Score:</strong> {selectedVendor.qualityScore}/100</p>
+                <p><strong>Average Lead Time:</strong> {selectedVendor.avgLeadTime} days</p>
+                <p><strong>Last Order Date:</strong> March 15, 2025</p>
+                <p><strong>Certifications:</strong> ISO 9001, AS9100</p>
+              </div>
+            </div>
+            
+            <div className="vendor-chart-container">
+              <h3>Performance History</h3>
+              <ResponsiveContainer width="100%" height={250}>
+                <LineChart data={[
+                  { month: 'Nov', onTime: Math.floor(Math.random() * 10) + 85, quality: Math.floor(Math.random() * 10) + 80 },
+                  { month: 'Dec', onTime: Math.floor(Math.random() * 10) + 85, quality: Math.floor(Math.random() * 10) + 80 },
+                  { month: 'Jan', onTime: Math.floor(Math.random() * 10) + 85, quality: Math.floor(Math.random() * 10) + 80 },
+                  { month: 'Feb', onTime: Math.floor(Math.random() * 10) + 85, quality: Math.floor(Math.random() * 10) + 80 },
+                  { month: 'Mar', onTime: Math.floor(Math.random() * 10) + 85, quality: Math.floor(Math.random() * 10) + 80 },
+                  { month: 'Apr', onTime: selectedVendor.deliveryPerformance, quality: selectedVendor.qualityScore }
+                ]} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Legend />
+                  <Line type="monotone" dataKey="onTime" stroke="#8884d8" name="On-time Delivery %" />
+                  <Line type="monotone" dataKey="quality" stroke="#82ca9d" name="Quality Score" />
+                </LineChart>
+              </ResponsiveContainer>
+            </div>
+            
+            <div className="section-header">
+              <h3>Current Orders</h3>
+            </div>
+            <table className="data-table">
               <thead>
-                <tr><th>Order ID</th><th>Rating</th><th>Comments</th></tr>
+                <tr>
+                  <th>Order ID</th>
+                  <th>Part Name</th>
+                  <th>Quantity</th>
+                  <th>Order Date</th>
+                  <th>Delivery Date</th>
+                  <th>Status</th>
+                </tr>
               </thead>
               <tbody>
-                {completedOrders.map((order) => (
-                  <tr key={order.id}>
-                    <td>{order.id}</td>
-                    <td>{order.rating}</td>
-                    <td>{order.comments}</td>
-                  </tr>
-                ))}
+                <tr>
+                  <td>#ORD-2025-1042</td>
+                  <td>Turbofan Blade</td>
+                  <td>500</td>
+                  <td>Apr 1, 2025</td>
+                  <td>Apr 20, 2025</td>
+                  <td><span className="status-badge in-progress">In Production</span></td>
+                </tr>
+                <tr>
+                  <td>#ORD-2025-0987</td>
+                  <td>Servo Bracket Assembly</td>
+                  <td>250</td>
+                  <td>Mar 18, 2025</td>
+                  <td>Apr 8, 2025</td>
+                  <td><span className="status-badge shipped">Shipped</span></td>
+                </tr>
               </tbody>
             </table>
-            <label>Filter by Time:</label><br />
-            <input type="text" placeholder="Enter date..." style={{ marginTop: "10px" }} />
-          </>
-        )}
+            
+            <div className="modal-actions" style={{ marginTop: "25px" }}>
+              <button className="secondary" onClick={() => setSelectedVendor(null)}>Close</button>
+              <div>
+                <button className="secondary" style={{ marginRight: "10px" }}>Contact Vendor</button>
+                <button className="primary">Place New Order</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    )}
+  </>
+)}
 
         {page === "vendor-control" && subPage === "bids" && (
           <>
