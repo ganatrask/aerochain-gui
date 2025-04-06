@@ -1586,34 +1586,409 @@ function App() {
   </>
 )}
 
-        {page === "vendor-control" && subPage === "bids" && (
-          <>
-            <h2>Vendor Bids</h2>
-            <table>
-              <thead>
-                <tr><th>Vendor</th><th>Material</th><th>Bid Price</th><th>Timeline</th><th>Rating</th><th>Blockchain Status</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Vendor A</td>
-                  <td>Titanium Alloy</td>
-                  <td>$120/unit</td>
-                  <td>3 weeks</td>
-                  <td>4.8 ⭐</td>
-                  <td>✅ Verified</td>
-                </tr>
-                <tr>
-                  <td>Vendor B</td>
-                  <td>Aluminum 7075</td>
-                  <td>$95/unit</td>
-                  <td>2 weeks</td>
-                  <td>4.5 ⭐</td>
-                  <td>⏳ Pending</td>
-                </tr>
-              </tbody>
-            </table>
-          </>
-        )}
+{page === "vendor-control" && subPage === "bids" && (
+  <>
+    <div className="header-banner">
+      <h2>Vendor Bid Management</h2>
+      <div className="blockchain-indicator">
+        {isBlockchainConnected ? 
+          <span className="blockchain-connected">⛓️ Blockchain Verification Active</span> : 
+          <span className="blockchain-disconnected">⛓️ Connect Wallet for Verification</span>}
+      </div>
+    </div>
+
+    {/* Summary Stats */}
+    <div className="kpi-row">
+      <div className="kpi-card">
+        <h3>Open RFQs</h3>
+        <div className="kpi-value">12</div>
+        <div className="kpi-subtitle">Total value: $3.2M</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Active Bids</h3>
+        <div className="kpi-value">28</div>
+        <div className="kpi-subtitle">From 16 vendors</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Pending Approval</h3>
+        <div className="kpi-value">7</div>
+        <div className="kpi-subtitle">Value: $820K</div>
+      </div>
+      <div className="kpi-card">
+        <h3>Avg. Cost Savings</h3>
+        <div className="kpi-value">14.3%</div>
+        <div className="kpi-subtitle">vs. previous quarter</div>
+      </div>
+    </div>
+
+    {/* Actions Bar */}
+    <div className="actions-bar" style={{ display: "flex", justifyContent: "space-between", margin: "20px 0" }}>
+      <div className="left-actions">
+        <button className="primary" style={{ marginRight: "10px" }}>Create New RFQ</button>
+        <button className="secondary" style={{ marginRight: "10px" }}>Bulk Upload RFQs</button>
+      </div>
+      <div className="right-actions">
+        <select className="filter-dropdown" style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc", marginRight: "10px" }}>
+          <option>All RFQ Status</option>
+          <option>Open</option>
+          <option>Closed</option>
+          <option>Awarded</option>
+        </select>
+        <button className="secondary">Export Bids Data</button>
+      </div>
+    </div>
+
+    {/* Tabs for different bid views */}
+    <div className="bid-tabs" style={{ display: "flex", borderBottom: "1px solid #e0e0e0", marginBottom: "20px" }}>
+      <div className="tab active" style={{ padding: "10px 20px", cursor: "pointer", borderBottom: "2px solid #e53935", color: "#e53935", fontWeight: "bold" }}>Active RFQs</div>
+      <div className="tab" style={{ padding: "10px 20px", cursor: "pointer" }}>Submitted Bids</div>
+      <div className="tab" style={{ padding: "10px 20px", cursor: "pointer" }}>Awarded Contracts</div>
+      <div className="tab" style={{ padding: "10px 20px", cursor: "pointer" }}>Archived RFQs</div>
+    </div>
+
+    {/* Active RFQs Section */}
+    <div className="section-header">
+      <h3>Active RFQs</h3>
+    </div>
+
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>RFQ ID</th>
+            <th>Material/Part</th>
+            <th>Quantity</th>
+            <th>Date Posted</th>
+            <th>Closing Date</th>
+            <th>Status</th>
+            <th>Blockchain Status</th>
+            <th>Bids</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><a href="#" onClick={(e) => e.preventDefault()}>RFQ-2025-042</a></td>
+            <td>Turbofan Blade</td>
+            <td>500 units</td>
+            <td>Apr 01, 2025</td>
+            <td>Apr 15, 2025</td>
+            <td><span className="status-badge open">Open</span></td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>3 bids</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Bids</button>
+                <button className="primary small">Compare</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => e.preventDefault()}>RFQ-2025-039</a></td>
+            <td>Actuator Arm</td>
+            <td>300 units</td>
+            <td>Mar 28, 2025</td>
+            <td>Apr 11, 2025</td>
+            <td><span className="status-badge open">Open</span></td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>5 bids</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Bids</button>
+                <button className="primary small">Compare</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => e.preventDefault()}>RFQ-2025-035</a></td>
+            <td>Landing Gear Shaft</td>
+            <td>150 units</td>
+            <td>Mar 25, 2025</td>
+            <td>Apr 08, 2025</td>
+            <td><span className="status-badge closing">Closing Soon</span></td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>2 bids</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Bids</button>
+                <button className="primary small">Compare</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => e.preventDefault()}>RFQ-2025-030</a></td>
+            <td>Avionics Heat Sink</td>
+            <td>800 units</td>
+            <td>Mar 20, 2025</td>
+            <td>Apr 10, 2025</td>
+            <td><span className="status-badge open">Open</span></td>
+            <td><span className="blockchain-pending">⏳ Pending</span></td>
+            <td>4 bids</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Bids</button>
+                <button className="primary small">Compare</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td><a href="#" onClick={(e) => e.preventDefault()}>RFQ-2025-028</a></td>
+            <td>Composite Fuselage Panel</td>
+            <td>200 units</td>
+            <td>Mar 18, 2025</td>
+            <td>Apr 04, 2025</td>
+            <td><span className="status-badge reviewing">Under Review</span></td>
+            <td><span className="blockchain-verified">✓ Verified</span></td>
+            <td>6 bids</td>
+            <td>
+              <div className="action-buttons">
+                <button className="secondary small">View Bids</button>
+                <button className="primary small">Compare</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {/* Bid Comparison Modal (dummy/preview) */}
+    <div className="section-header" style={{ marginTop: "30px" }}>
+      <h3>Bid Comparison: Turbofan Blade (RFQ-2025-042)</h3>
+    </div>
+    
+    <div className="comparison-container" style={{ backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)", marginBottom: "30px" }}>
+      <div className="data-table-container">
+        <table className="data-table">
+          <thead>
+            <tr>
+              <th>Vendor</th>
+              <th>Bid Price</th>
+              <th>Unit Price</th>
+              <th>Lead Time</th>
+              <th>Payment Terms</th>
+              <th>Quality Certification</th>
+              <th>Vendor Rating</th>
+              <th>Blockchain Status</th>
+              <th>Actions</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style={{ backgroundColor: "#fff0f0" }}>
+              <td>AeroTech Industries</td>
+              <td><strong>$160,000</strong></td>
+              <td>$320/unit</td>
+              <td>14 days</td>
+              <td>Net 30</td>
+              <td>ISO 9001, AS9100</td>
+              <td>
+                <div className="rating-display">
+                  <div className="stars" style={{ color: "#ffc107" }}>★★★★★</div>
+                  <span>4.8</span>
+                </div>
+              </td>
+              <td><span className="blockchain-verified">✓ Verified</span></td>
+              <td>
+                <button className="primary small">Award</button>
+              </td>
+            </tr>
+            <tr>
+              <td>TitaniumPro Supplies</td>
+              <td>$172,500</td>
+              <td>$345/unit</td>
+              <td>18 days</td>
+              <td>Net 45</td>
+              <td>ISO 9001</td>
+              <td>
+                <div className="rating-display">
+                  <div className="stars" style={{ color: "#ffc107" }}>★★★★☆</div>
+                  <span>4.5</span>
+                </div>
+              </td>
+              <td><span className="blockchain-verified">✓ Verified</span></td>
+              <td>
+                <button className="primary small">Award</button>
+              </td>
+            </tr>
+            <tr>
+              <td>Global Aero Components</td>
+              <td>$185,000</td>
+              <td>$370/unit</td>
+              <td>12 days</td>
+              <td>Net 30</td>
+              <td>ISO 9001, AS9100</td>
+              <td>
+                <div className="rating-display">
+                  <div className="stars" style={{ color: "#ffc107" }}>★★★★☆</div>
+                  <span>4.2</span>
+                </div>
+              </td>
+              <td><span className="blockchain-verified">✓ Verified</span></td>
+              <td>
+                <button className="primary small">Award</button>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      
+      <div className="comparison-charts" style={{ display: "flex", marginTop: "20px", gap: "20px" }}>
+        <div className="chart-container" style={{ flex: "1" }}>
+          <h4>Price Comparison</h4>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={[
+              { name: 'AeroTech', price: 320 },
+              { name: 'TitaniumPro', price: 345 },
+              { name: 'Global Aero', price: 370 }
+            ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis label={{ value: 'Unit Price ($)', angle: -90, position: 'insideLeft' }} />
+              <Tooltip formatter={(value) => [`$${value}`, 'Unit Price']} />
+              <Bar dataKey="price" fill="#e53935" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+        
+        <div className="chart-container" style={{ flex: "1" }}>
+          <h4>Lead Time Comparison</h4>
+          <ResponsiveContainer width="100%" height={200}>
+            <BarChart data={[
+              { name: 'AeroTech', days: 14 },
+              { name: 'TitaniumPro', days: 18 },
+              { name: 'Global Aero', days: 12 }
+            ]} margin={{ top: 5, right: 30, left: 20, bottom: 5 }}>
+              <CartesianGrid strokeDasharray="3 3" />
+              <XAxis dataKey="name" />
+              <YAxis label={{ value: 'Days', angle: -90, position: 'insideLeft' }} />
+              <Tooltip formatter={(value) => [`${value} days`, 'Lead Time']} />
+              <Bar dataKey="days" fill="#8884d8" />
+            </BarChart>
+          </ResponsiveContainer>
+        </div>
+      </div>
+      
+      <div className="comparison-actions" style={{ display: "flex", justifyContent: "space-between", marginTop: "20px" }}>
+        <button className="secondary">Export Comparison</button>
+        <div>
+          <button className="secondary" style={{ marginRight: "10px" }}>Request Additional Information</button>
+          <button className="primary">Award Selected Bid</button>
+        </div>
+      </div>
+    </div>
+
+    {/* Recent Activity Section */}
+    <div className="section-header">
+      <h3>Recent Bid Activity</h3>
+    </div>
+    
+    <div className="activity-timeline" style={{ backgroundColor: "white", padding: "20px", borderRadius: "10px", boxShadow: "0 4px 8px rgba(0, 0, 0, 0.08)" }}>
+      <div className="timeline-item" style={{ borderLeft: "2px solid #e53935", paddingLeft: "20px", position: "relative", marginBottom: "20px" }}>
+        <div className="timeline-dot" style={{ position: "absolute", left: "-10px", top: "0", width: "18px", height: "18px", backgroundColor: "#e53935", borderRadius: "50%" }}></div>
+        <div className="timeline-content">
+          <div className="timeline-header" style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ fontWeight: "bold" }}>New Bid Received</span>
+            <span style={{ color: "#666", fontSize: "14px" }}>April 5, 2025 - 10:32 AM</span>
+          </div>
+          <p>TitaniumPro Supplies submitted a bid for RFQ-2025-042 (Turbofan Blade). <a href="#">View Details</a></p>
+        </div>
+      </div>
+      
+      <div className="timeline-item" style={{ borderLeft: "2px solid #e53935", paddingLeft: "20px", position: "relative", marginBottom: "20px" }}>
+        <div className="timeline-dot" style={{ position: "absolute", left: "-10px", top: "0", width: "18px", height: "18px", backgroundColor: "#e53935", borderRadius: "50%" }}></div>
+        <div className="timeline-content">
+          <div className="timeline-header" style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ fontWeight: "bold" }}>RFQ Created</span>
+            <span style={{ color: "#666", fontSize: "14px" }}>April 4, 2025 - 3:15 PM</span>
+          </div>
+          <p>New RFQ-2025-044 created for High-Precision Gearbox (100 units). <a href="#">View RFQ</a></p>
+        </div>
+      </div>
+      
+      <div className="timeline-item" style={{ borderLeft: "2px solid #e53935", paddingLeft: "20px", position: "relative", marginBottom: "20px" }}>
+        <div className="timeline-dot" style={{ position: "absolute", left: "-10px", top: "0", width: "18px", height: "18px", backgroundColor: "#e53935", borderRadius: "50%" }}></div>
+        <div className="timeline-content">
+          <div className="timeline-header" style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ fontWeight: "bold" }}>Bid Awarded</span>
+            <span style={{ color: "#666", fontSize: "14px" }}>April 3, 2025 - 11:47 AM</span>
+          </div>
+          <p>Contract awarded to Precision Aerospace for RFQ-2025-027 (Avionics Cooling System). <a href="#">View Contract</a></p>
+        </div>
+      </div>
+      
+      <div className="timeline-item" style={{ borderLeft: "2px solid #e53935", paddingLeft: "20px", position: "relative" }}>
+        <div className="timeline-dot" style={{ position: "absolute", left: "-10px", top: "0", width: "18px", height: "18px", backgroundColor: "#e53935", borderRadius: "50%" }}></div>
+        <div className="timeline-content">
+          <div className="timeline-header" style={{ display: "flex", justifyContent: "space-between" }}>
+            <span style={{ fontWeight: "bold" }}>RFQ Updated</span>
+            <span style={{ color: "#666", fontSize: "14px" }}>April 2, 2025 - 9:23 AM</span>
+          </div>
+          <p>Specifications updated for RFQ-2025-035 (Landing Gear Shaft). <a href="#">View Changes</a></p>
+        </div>
+      </div>
+    </div>
+
+    {/* CSS for new components */}
+    <style jsx>{`
+      .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+      }
+      .open {
+        background-color: #e8f5e9;
+        color: #4caf50;
+      }
+      .closing {
+        background-color: #fff3e0;
+        color: #ff9800;
+      }
+      .reviewing {
+        background-color: #e3f2fd;
+        color: #2196f3;
+      }
+      .blockchain-verified {
+        background-color: #e8f5e9;
+        color: #4caf50;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+      }
+      .blockchain-pending {
+        background-color: #fff3e0;
+        color: #ff9800;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+        display: inline-block;
+        font-size: 12px;
+      }
+      .action-buttons {
+        display: flex;
+        gap: 5px;
+      }
+      button.small {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+      .filter-dropdown {
+        min-width: 150px;
+      }
+      .rating-display {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+      }
+      .stars {
+        color: #ffc107;
+        letter-spacing: -2px;
+      }
+    `}</style>
+  </>
+)}
 
         {page === "vendor-control" && subPage === "followups" && (
           <>
