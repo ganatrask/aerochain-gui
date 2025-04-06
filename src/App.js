@@ -128,6 +128,68 @@ function App() {
         "Lead Time": "5–7 business days",
       }
     },
+    {
+      id: 6,
+      name: "Composite Fuselage Panel",
+      material: "Carbon Fiber Composite",
+      lastUpdated: "Today",
+      status: "Public",
+      specs: {
+        Design: "Honeycomb core sandwich panel for lightweight strength",
+        Quantitative: "Weight - 3.0 kg/m²",
+        "Type of Material": "Epoxy resin with carbon fiber",
+        "Thermal Conductivity": "0.15 W/m·K",
+        "Tensile Strength": "900 MPa",
+        "Elastic Modulus": "85 GPa",
+        "Impact Resistance": "High energy absorption",
+        FireResistance: "Meets FAR 25.853",
+        Applications: "Fuselage skin, fairings, access panels",
+        Certifications: "FAA Certified, ISO 9001",
+        "Manufacturing Process": "Autoclave cured",
+        "Surface Treatment": "Fire-retardant coating",
+        Availability: "Limited stock",
+        "Lead Time": "3–4 weeks",
+      }
+    },
+    {
+      id: 7,
+      name: "Flight Control Linkage",
+      material: "Titanium Grade 5",
+      lastUpdated: "Yesterday",
+      status: "Private",
+      specs: {
+        Design: "Precision-machined rod with clevis ends",
+        Quantitative: "Weight - 0.6 kg",
+        "Tensile Strength": "950 MPa",
+        "Elastic Modulus": "114 GPa",
+        Corrosion: "High resistance in salt spray environment",
+        Compatibility: "Universal aerospace actuator interfaces",
+        Applications: "Elevator and aileron actuation systems",
+        Finish: "Passivated surface",
+        Certifications: "AMS 4911 Compliant",
+        Availability: "Available upon request",
+        "Lead Time": "2–3 weeks",
+      }
+    },
+    {
+      id: 8,
+      name: "High-Precision Gearbox",
+      material: "Nitrided Alloy Steel",
+      lastUpdated: "5 days ago",
+      status: "Public",
+      specs: {
+        Design: "Compact planetary gear system with high torque output",
+        Quantitative: "Torque - 300 Nm, Weight - 2.3 kg",
+        "Gear Ratio": "50:1",
+        Lubrication: "Synthetic aerospace-grade grease",
+        Applications: "Robotic joints, actuator drives",
+        Certifications: "AS9100, ISO 9001",
+        Compatibility: "Brushless DC and stepper motors",
+        Finish: "Nickel-coated housing",
+        Availability: "In stock for limited runs",
+        "Lead Time": "7–10 business days",
+      }
+    },    
   ];
   
 
