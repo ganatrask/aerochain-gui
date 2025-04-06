@@ -62,7 +62,7 @@ function App() {
   const [txStatus, setTxStatus] = useState("");
   
   // New state from App(1).js
-  const [page, setPage] = useState("dashboard");
+  const [page, setPage] = useState("overview-dashboard");
   const [subPage, setSubPage] = useState(null);
   const [vendorControlOpen, setVendorControlOpen] = useState(false);
   const [showVendorForm, setShowVendorForm] = useState(false);
@@ -386,6 +386,7 @@ function App() {
       <div className="sidebar">
         <h2>{page === "vendors" ? "Performance Dashboard" : "Dashboard"}</h2>
         <ul>
+          <li onClick={() => setPage("overview-dashboard")}>📊 Analytics Dashboard</li>
           <li onClick={() => setPage("dashboard")}>👥 Buyers</li>
           <li onClick={() => setPage("orders")}>📦 Orders</li>
           <li onClick={() => setPage("vendors")}>🏭 Vendors</li>
@@ -408,6 +409,111 @@ function App() {
       </div>
 
       <div className="main-content">
+        {page === "overview-dashboard" && (
+          <div className="dashboard-overview">
+            <h2>Aerospace Procurement Analytics</h2>
+            
+            {/* Top KPIs row */}
+            <div className="kpi-row">
+              <div className="kpi-card">
+                <h3>Verified Vendors</h3>
+                <div className="kpi-value">24 <span className="blockchain-verified">⛓️</span></div>
+              </div>
+              <div className="kpi-card">
+                <h3>On-time Delivery</h3>
+                <div className="kpi-value">92%</div>
+              </div>
+              <div className="kpi-card">
+                <h3>Active Contracts</h3>
+                <div className="kpi-value">37</div>
+              </div>
+              <div className="kpi-card">
+                <h3>Parts Inventory</h3>
+                <div className="kpi-value">1,254</div>
+              </div>
+            </div>
+            
+            {/* Charts section */}
+            <div className="charts-grid">
+              <div className="chart-container large">
+                <h3>Vendor Performance Timeline</h3>
+                <div className="chart-placeholder">
+                  <div className="chart-description">
+                    Shows on-time delivery rates and quality metrics over time
+                  </div>
+                </div>
+              </div>
+              
+              <div className="chart-container">
+                <h3>Blockchain Contract Activity</h3>
+                <div className="chart-placeholder">
+                  <div className="chart-description">
+                    Number of contracts registered on blockchain by month
+                  </div>
+                </div>
+              </div>
+              
+              <div className="chart-container">
+                <h3>Inventory Levels</h3>
+                <div className="chart-placeholder">
+                  <div className="chart-description">
+                    Current inventory levels by part category
+                  </div>
+                </div>
+              </div>
+              
+              <div className="chart-container large">
+                <h3>Price Trend Analysis</h3>
+                <div className="chart-placeholder">
+                  <div className="chart-description">
+                    Historical pricing for key aerospace materials
+                  </div>
+                </div>
+              </div>
+              
+              <div className="chart-container">
+                <h3>Lead Time Analysis</h3>
+                <div className="chart-placeholder">
+                  <div className="chart-description">
+                    Average lead time by supplier and part category
+                  </div>
+                </div>
+              </div>
+              
+              <div className="chart-container">
+                <h3>Supplier Distribution</h3>
+                <div className="chart-placeholder">
+                  <div className="chart-description">
+                    Geographic distribution of aerospace suppliers
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <div className="blockchain-status-panel">
+              <h3>⛓️ Blockchain Network Status</h3>
+              <div className="status-grid">
+                <div className="status-item">
+                  <span className="status-label">Network:</span>
+                  <span className="status-value">Ethereum Mainnet</span>
+                </div>
+                <div className="status-item">
+                  <span className="status-label">Connected Account:</span>
+                  <span className="status-value">{account ? `${account.substring(0, 6)}...${account.substring(account.length - 4)}` : "Not connected"}</span>
+                </div>
+                <div className="status-item">
+                  <span className="status-label">Smart Contract:</span>
+                  <span className="status-value">VendorRegistry</span>
+                </div>
+                <div className="status-item">
+                  <span className="status-label">Connection Status:</span>
+                  <span className="status-value">{isBlockchainConnected ? "Connected ✅" : "Disconnected ❌"}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+        
         {page === "dashboard" && (
           <>
             <div className="header-banner">

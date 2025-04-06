@@ -397,3 +397,112 @@ input[type="text"] {
   padding: 5px 10px;
   border-radius: 4px;
 }
+
+/* Dashboard overview styles */
+.dashboard-overview {
+  width: 100%;
+}
+
+.kpi-row {
+  display: flex;
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.kpi-card {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  flex: 1;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  text-align: center;
+}
+
+.kpi-value {
+  font-size: 28px;
+  font-weight: bold;
+  color: #2e5bff;
+  margin-top: 10px;
+}
+
+.charts-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  margin-bottom: 30px;
+}
+
+.chart-container {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+}
+
+.chart-container.large {
+  grid-column: span 2;
+}
+
+.chart-container h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.chart-placeholder {
+  height: 200px;
+  background-color: #f5f7fa;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px dashed #ccc;
+}
+
+.chart-container.large .chart-placeholder {
+  height: 250px;
+}
+
+.chart-description {
+  color: #666;
+  font-style: italic;
+  text-align: center;
+  padding: 0 20px;
+}
+
+.blockchain-status-panel {
+  background-color: white;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+  margin-top: 20px;
+}
+
+.blockchain-status-panel h3 {
+  margin-top: 0;
+  margin-bottom: 15px;
+  color: #333;
+}
+
+.status-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 15px;
+}
+
+.status-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #f8f9fa;
+  border-radius: 5px;
+}
+
+.status-label {
+  font-weight: bold;
+  color: #555;
+}
+
+.status-value {
+  font-family: monospace;
+}
