@@ -739,31 +739,348 @@ function App() {
           </>
         )}
 
-        {page === "orders" && (
-          <>
-            <h2>Upload Inventory</h2>
-            <div className="upload-box">Drag and drop or click to upload XLS/CSV files</div>
-            <h3 style={{ marginTop: "30px" }}>Inventory Management</h3>
-            <table>
-              <thead>
-                <tr><th>Material Name</th><th>Quantity</th><th>Location</th><th>Last Updated</th></tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Material 1</td>
-                  <td>100</td>
-                  <td>Warehouse A</td>
-                  <td>Today</td>
-                </tr>
-              </tbody>
-            </table>
-            <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
-              <button className="primary">Save Changes</button>
-              <button className="primary">Export Inventory</button>
-              <button className="primary">Order Materials</button>
-            </div>
-          </>
-        )}
+{page === "orders" && (
+  <>
+    <div className="header-banner">
+      <h2>Inventory & Order Management</h2>
+      <div className="blockchain-indicator">
+        {isBlockchainConnected ? 
+          <span className="blockchain-connected">⛓️ Blockchain Verification Active</span> : 
+          <span className="blockchain-disconnected">⛓️ Connect Wallet for Verification</span>}
+      </div>
+    </div>
+
+    {/* File Upload Section */}
+    <div className="section-header">
+      <h3>Upload Inventory Data</h3>
+    </div>
+    <div className="upload-box">
+      <div style={{ marginBottom: "15px" }}>
+        <i className="fa fa-upload" style={{ fontSize: "32px", color: "#e53935", marginBottom: "10px" }}></i>
+        <p>Drag and drop inventory files here or click to browse</p>
+        <p style={{ fontSize: "12px", color: "#666" }}>Supported formats: XLS, XLSX, CSV</p>
+      </div>
+      <button className="secondary">Select Files</button>
+    </div>
+
+    {/* Current Orders Section */}
+    <div className="section-header">
+      <h3>Current Orders</h3>
+    </div>
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Order ID</th>
+            <th>Part Name</th>
+            <th>Vendor</th>
+            <th>Quantity</th>
+            <th>Order Date</th>
+            <th>Expected Delivery</th>
+            <th>Status</th>
+            <th>Blockchain Verified</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>#ORD-2025-1042</td>
+            <td>Turbofan Blade</td>
+            <td>AeroTech Industries</td>
+            <td>500</td>
+            <td>Apr 1, 2025</td>
+            <td>Apr 20, 2025</td>
+            <td><span className="status-badge in-progress">In Production</span></td>
+            <td><span className="blockchain-verified">✓</span></td>
+            <td><button className="secondary small">View Details</button></td>
+          </tr>
+          <tr>
+            <td>#ORD-2025-1039</td>
+            <td>Actuator Arm</td>
+            <td>TitaniumPro Supplies</td>
+            <td>300</td>
+            <td>Mar 28, 2025</td>
+            <td>Apr 15, 2025</td>
+            <td><span className="status-badge testing">Final Testing</span></td>
+            <td><span className="blockchain-verified">✓</span></td>
+            <td><button className="secondary small">View Details</button></td>
+          </tr>
+          <tr>
+            <td>#ORD-2025-1035</td>
+            <td>Landing Gear Shaft</td>
+            <td>Global Aero Components</td>
+            <td>150</td>
+            <td>Mar 25, 2025</td>
+            <td>Apr 25, 2025</td>
+            <td><span className="status-badge delayed">Delayed</span></td>
+            <td><span className="blockchain-verified">✓</span></td>
+            <td><button className="secondary small">View Details</button></td>
+          </tr>
+          <tr>
+            <td>#ORD-2025-1030</td>
+            <td>Avionics Heat Sink</td>
+            <td>Precision Aerospace</td>
+            <td>800</td>
+            <td>Mar 20, 2025</td>
+            <td>Apr 10, 2025</td>
+            <td><span className="status-badge qc">Quality Control</span></td>
+            <td><span className="blockchain-pending">Pending</span></td>
+            <td><button className="secondary small">View Details</button></td>
+          </tr>
+          <tr>
+            <td>#ORD-2025-1028</td>
+            <td>Servo Bracket Assembly</td>
+            <td>AeroTech Industries</td>
+            <td>250</td>
+            <td>Mar 18, 2025</td>
+            <td>Apr 12, 2025</td>
+            <td><span className="status-badge shipped">Shipped</span></td>
+            <td><span className="blockchain-verified">✓</span></td>
+            <td><button className="secondary small">View Details</button></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    {/* Inventory Management Section */}
+    <div className="section-header">
+      <h3>Inventory Management</h3>
+    </div>
+    <div className="inventory-controls" style={{ marginBottom: "20px", display: "flex", gap: "15px", alignItems: "center" }}>
+      <input type="text" placeholder="Search parts..." style={{ flex: "1" }} />
+      <select className="filter-dropdown" style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}>
+        <option>All Locations</option>
+        <option>Warehouse A</option>
+        <option>Warehouse B</option>
+        <option>Production Floor</option>
+      </select>
+      <select className="filter-dropdown" style={{ padding: "8px", borderRadius: "5px", border: "1px solid #ccc" }}>
+        <option>All Status</option>
+        <option>In Stock</option>
+        <option>Low Stock</option>
+        <option>Out of Stock</option>
+      </select>
+      <button className="primary">Filter</button>
+    </div>
+
+    <div className="data-table-container">
+      <table className="data-table">
+        <thead>
+          <tr>
+            <th>Part ID</th>
+            <th>Part Name</th>
+            <th>Current Quantity</th>
+            <th>Min Threshold</th>
+            <th>Location</th>
+            <th>Last Updated</th>
+            <th>Status</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>P-1001</td>
+            <td>Turbofan Blade</td>
+            <td>1,250</td>
+            <td>1,000</td>
+            <td>Warehouse A</td>
+            <td>Apr 5, 2025</td>
+            <td><span className="inventory-status good">In Stock</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1002</td>
+            <td>Actuator Arm</td>
+            <td>450</td>
+            <td>400</td>
+            <td>Warehouse A</td>
+            <td>Apr 4, 2025</td>
+            <td><span className="inventory-status warning">Low Stock</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1003</td>
+            <td>Landing Gear Shaft</td>
+            <td>180</td>
+            <td>200</td>
+            <td>Warehouse B</td>
+            <td>Apr 3, 2025</td>
+            <td><span className="inventory-status critical">Below Threshold</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1004</td>
+            <td>Avionics Heat Sink</td>
+            <td>780</td>
+            <td>500</td>
+            <td>Warehouse A</td>
+            <td>Apr 6, 2025</td>
+            <td><span className="inventory-status good">In Stock</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1005</td>
+            <td>Servo Bracket Assembly</td>
+            <td>620</td>
+            <td>400</td>
+            <td>Production Floor</td>
+            <td>Apr 5, 2025</td>
+            <td><span className="inventory-status good">In Stock</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1006</td>
+            <td>Composite Fuselage Panel</td>
+            <td>320</td>
+            <td>300</td>
+            <td>Warehouse B</td>
+            <td>Apr 4, 2025</td>
+            <td><span className="inventory-status warning">Low Stock</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1007</td>
+            <td>Flight Control Linkage</td>
+            <td>500</td>
+            <td>350</td>
+            <td>Warehouse A</td>
+            <td>Apr 2, 2025</td>
+            <td><span className="inventory-status good">In Stock</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td>P-1008</td>
+            <td>High-Precision Gearbox</td>
+            <td>75</td>
+            <td>100</td>
+            <td>Production Floor</td>
+            <td>Apr 6, 2025</td>
+            <td><span className="inventory-status critical">Below Threshold</span></td>
+            <td>
+              <div style={{ display: "flex", gap: "5px" }}>
+                <button className="secondary small">Edit</button>
+                <button className="primary small">Order</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    
+    {/* Order Actions */}
+    <div style={{ marginTop: "25px", display: "flex", gap: "15px", justifyContent: "flex-end" }}>
+      <button className="secondary">Export Inventory Data</button>
+      <button className="primary">Place Bulk Order</button>
+      <button className="primary">Generate Inventory Report</button>
+    </div>
+
+    {/* Add CSS for the new elements */}
+    <style jsx>{`
+      .status-badge {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+      }
+      .in-progress {
+        background-color: #fff0f0;
+        color: #e53935;
+      }
+      .testing {
+        background-color: #e8f4fd;
+        color: #0d6efd;
+      }
+      .delayed {
+        background-color: #fff3e0;
+        color: #ff9800;
+      }
+      .qc {
+        background-color: #e0f7fa;
+        color: #00bcd4;
+      }
+      .shipped {
+        background-color: #e8f5e9;
+        color: #4caf50;
+      }
+      .blockchain-verified {
+        background-color: #e8f5e9;
+        color: #4caf50;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+      }
+      .blockchain-pending {
+        background-color: #fff3e0;
+        color: #ff9800;
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-weight: bold;
+      }
+      .inventory-status {
+        padding: 5px 10px;
+        border-radius: 15px;
+        font-size: 12px;
+        font-weight: bold;
+        display: inline-block;
+      }
+      .good {
+        background-color: #e8f5e9;
+        color: #4caf50;
+      }
+      .warning {
+        background-color: #fff3e0;
+        color: #ff9800;
+      }
+      .critical {
+        background-color: #ffebee;
+        color: #f44336;
+      }
+      .filter-dropdown {
+        min-width: 150px;
+      }
+      button.small {
+        padding: 5px 10px;
+        font-size: 12px;
+      }
+    `}</style>
+  </>
+)}
 
         {page === "vendors" && (
           <>
