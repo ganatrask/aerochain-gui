@@ -700,10 +700,12 @@ input[type="text"] {
 
 .detail-section:last-child {
   grid-column: span 2;
-}: center;
-  padding: 0 20px;
 }
 
+.chart-description {
+  text-align: center;
+  padding: 0 20px;
+}
 .blockchain-status-panel {
   background-color: white;
   padding: 20px;
