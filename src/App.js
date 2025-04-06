@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./App.css";
 import Web3 from "web3";
+import { LineChart, Line, BarChart, Bar, PieChart, Pie, Cell, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 
 // ABI for a simplified smart contract (you would replace this with your actual contract ABI)
 const vendorRegistryABI = [
@@ -83,14 +84,14 @@ function App() {
     { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 800, orderDate: "2025-03-01", deliveryDate: "2025-04-10", progress: 95, forecastDelivery: "On time", status: "Quality Control" },
   ];
   
-  // Sample current inventory
+  // Sample current inventory with cost data
   const currentInventory = [
-    { id: 1, partName: "Turbofan Blade", companyName: "AeroTech Industries", count: 1250, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-30", minThreshold: 1000 },
-    { id: 2, partName: "Actuator Arm", companyName: "TitaniumPro Supplies", count: 450, lastUpdate: "2025-04-03", nextOrderDue: "2025-04-15", minThreshold: 400 },
-    { id: 3, partName: "Landing Gear Shaft", companyName: "Global Aero Components", count: 180, lastUpdate: "2025-04-01", nextOrderDue: "2025-04-10", minThreshold: 200 },
-    { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 780, lastUpdate: "2025-04-05", nextOrderDue: "2025-05-15", minThreshold: 500 },
-    { id: 5, partName: "Servo Bracket Assembly", companyName: "AeroTech Industries", count: 620, lastUpdate: "2025-04-04", nextOrderDue: "2025-04-20", minThreshold: 400 },
-    { id: 6, partName: "Composite Fuselage Panel", companyName: "Global Aero Components", count: 320, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-12", minThreshold: 300 },
+    { id: 1, partName: "Turbofan Blade", companyName: "AeroTech Industries", count: 1250, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-30", minThreshold: 1000, unitCost: 3200, reorderCost: 150000, leadTime: 14 },
+    { id: 2, partName: "Actuator Arm", companyName: "TitaniumPro Supplies", count: 450, lastUpdate: "2025-04-03", nextOrderDue: "2025-04-15", minThreshold: 400, unitCost: 850, reorderCost: 42000, leadTime: 10 },
+    { id: 3, partName: "Landing Gear Shaft", companyName: "Global Aero Components", count: 180, lastUpdate: "2025-04-01", nextOrderDue: "2025-04-10", minThreshold: 200, unitCost: 4500, reorderCost: 90000, leadTime: 21 },
+    { id: 4, partName: "Avionics Heat Sink", companyName: "Precision Aerospace", count: 780, lastUpdate: "2025-04-05", nextOrderDue: "2025-05-15", minThreshold: 500, unitCost: 320, reorderCost: 25000, leadTime: 7 },
+    { id: 5, partName: "Servo Bracket Assembly", companyName: "AeroTech Industries", count: 620, lastUpdate: "2025-04-04", nextOrderDue: "2025-04-20", minThreshold: 400, unitCost: 275, reorderCost: 18000, leadTime: 8 },
+    { id: 6, partName: "Composite Fuselage Panel", companyName: "Global Aero Components", count: 320, lastUpdate: "2025-04-02", nextOrderDue: "2025-04-12", minThreshold: 300, unitCost: 5800, reorderCost: 175000, leadTime: 30 },
   ];
   
   // Sample vendor performance data for charts
@@ -505,8 +506,9 @@ function App() {
                 <div className="kpi-value">37</div>
               </div>
               <div className="kpi-card">
-                <h3>Parts Inventory</h3>
-                <div className="kpi-value">1,254</div>
+                <h3>Inventory Value</h3>
+                <div className="kpi-value">$7.4M</div>
+                <div className="kpi-subtitle">Avg. Reorder Cost: $83.3K</div>
               </div>
             </div>
             
@@ -590,62 +592,91 @@ function App() {
             <div className="charts-grid">
               <div className="chart-container large">
                 <h3>Vendor Performance Timeline</h3>
-                <div className="chart-placeholder">
-                  <div className="chart-description">
-                    Shows on-time delivery rates and quality metrics over time
-                    <div className="chart-data">
-                      <pre>{JSON.stringify(vendorPerformanceData, null, 2)}</pre>
-                    </div>
-                  </div>
-                </div>
+                <ResponsiveContainer width="100%" height={250}>
+                  <LineChart data={vendorPerformanceData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Line type="monotone" dataKey="onTime" stroke="#8884d8" name="On-time Delivery %" />
+                    <Line type="monotone" dataKey="quality" stroke="#82ca9d" name="Quality Score" />
+                    <Line type="monotone" dataKey="blockchain" stroke="#ffc658" name="Blockchain Verified %" />
+                  </LineChart>
+                </ResponsiveContainer>
               </div>
               
               <div className="chart-container">
                 <h3>Blockchain Contract Activity</h3>
-                <div className="chart-placeholder">
-                  <div className="chart-description">
-                    Number of contracts registered on blockchain by month
-                    <div className="chart-data">
-                      <pre>{JSON.stringify(blockchainActivityData, null, 2)}</pre>
-                    </div>
-                  </div>
-                </div>
+                <ResponsiveContainer width="100%" height={200}>
+                  <BarChart data={blockchainActivityData} margin={{ top: 10, right: 30, left: 0, bottom: 0 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="month" />
+                    <YAxis />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="contracts" fill="#8884d8" name="New Contracts" />
+                    <Bar dataKey="verifications" fill="#82ca9d" name="Verifications" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
               
               <div className="chart-container">
                 <h3>Inventory Levels</h3>
-                <div className="chart-placeholder">
-                  <div className="chart-description">
-                    Current inventory levels by part category
-                    <div className="chart-data">
-                      <pre>{JSON.stringify(inventoryLevelsData.slice(0, 3), null, 2)}</pre>
-                    </div>
-                  </div>
-                </div>
+                <ResponsiveContainer width="100%" height={200}>
+                  <BarChart data={inventoryLevelsData} layout="vertical" margin={{ top: 5, right: 30, left: 50, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis type="number" />
+                    <YAxis dataKey="name" type="category" />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="value" fill="#82ca9d" name="Current Stock">
+                      {inventoryLevelsData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={entry.value < entry.threshold ? '#ff8042' : '#82ca9d'} />
+                      ))}
+                    </Bar>
+                    <Bar dataKey="threshold" fill="#8884d8" name="Min Threshold" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
               
               <div className="chart-container">
                 <h3>Lead Time Analysis</h3>
-                <div className="chart-placeholder">
-                  <div className="chart-description">
-                    Average lead time by supplier and part category
-                    <div className="chart-data">
-                      <pre>{JSON.stringify(leadTimeData, null, 2)}</pre>
-                    </div>
-                  </div>
-                </div>
+                <ResponsiveContainer width="100%" height={200}>
+                  <BarChart data={leadTimeData} margin={{ top: 20, right: 30, left: 20, bottom: 5 }}>
+                    <CartesianGrid strokeDasharray="3 3" />
+                    <XAxis dataKey="vendor" />
+                    <YAxis label={{ value: 'Days', angle: -90, position: 'insideLeft' }} />
+                    <Tooltip />
+                    <Legend />
+                    <Bar dataKey="quoted" fill="#8884d8" name="Quoted Lead Time" />
+                    <Bar dataKey="actual" fill="#82ca9d" name="Actual Lead Time" />
+                  </BarChart>
+                </ResponsiveContainer>
               </div>
               
               <div className="chart-container">
                 <h3>Supplier Distribution</h3>
-                <div className="chart-placeholder">
-                  <div className="chart-description">
-                    Geographic distribution of aerospace suppliers
-                    <div className="chart-data">
-                      <pre>{JSON.stringify(supplierDistributionData, null, 2)}</pre>
-                    </div>
-                  </div>
-                </div>
+                <ResponsiveContainer width="100%" height={200}>
+                  <PieChart>
+                    <Pie
+                      data={supplierDistributionData}
+                      cx="50%"
+                      cy="50%"
+                      labelLine={true}
+                      outerRadius={80}
+                      fill="#8884d8"
+                      dataKey="value"
+                      nameKey="name"
+                      label={({name, percent}) => `${name}: ${(percent * 100).toFixed(0)}%`}
+                    >
+                      {supplierDistributionData.map((entry, index) => (
+                        <Cell key={`cell-${index}`} fill={['#0088FE', '#00C49F', '#FFBB28', '#FF8042', '#8884d8'][index % 5]} />
+                      ))}
+                    </Pie>
+                    <Tooltip formatter={(value) => `${value}%`} />
+                  </PieChart>
+                </ResponsiveContainer>
               </div>
             </div>
             
